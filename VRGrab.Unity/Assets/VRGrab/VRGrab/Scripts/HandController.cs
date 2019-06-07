@@ -10,11 +10,12 @@ namespace Barliesque.VRGrab
 	/// <summary>
 	/// Match this transform to an Oculus Touch controller and monitor the states of its buttons.
 	/// </summary>
-	[RequireComponent(typeof(Rigidbody))]
 	public class HandController : MonoBehaviour
 	{
 		[SerializeField] Hand _hand;
 		public Hand Hand { get { return _hand; } }
+
+		[SerializeField] MatchTransform _handSolid;
 
 		// Note: Open an Inspector panel in debug mode to monitor these ButtonState values at runtime
 
@@ -24,13 +25,7 @@ namespace Barliesque.VRGrab
 		public ButtonState BorY { get; private set; } = new ButtonState();
 		public ButtonState ThumbRest { get; private set; } = new ButtonState();
 
-		public Rigidbody Body { get; private set; }
 
-
-		private void Awake()
-		{
-			Body = GetComponent<Rigidbody>();
-		}
 
 		private void Update()
 		{

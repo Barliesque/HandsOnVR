@@ -17,10 +17,14 @@ namespace Barliesque.VRGrab
 		[SerializeField] Grabber _otherHand;
 		[SerializeField] LayerMask _grabbableLayers = 0x7FFFFFFF;
 
-		List<Grabbable> _couldGrab = new List<Grabbable>();
+		List<Collider> _couldGrab = new List<Collider>();
 		Grabbable _grabbed;
 		RaycastHit[] _hits = new RaycastHit[3];
 		GrabJoint _joint;
+
+		float _colliderReactivationTimer;
+		const float _colliderReactivationDelay = 1f;
+
 
 		private void Awake()
 		{
@@ -37,10 +41,10 @@ namespace Barliesque.VRGrab
 			{
 				// Is this a Grabbable object?
 				var grabbable = other.GetComponentInParent<Grabbable>();
-				if (grabbable && !_couldGrab.Contains(grabbable))
+				if (grabbable && !_couldGrab.Contains(other))
 				{
-					Debug.Log($"You could grab {grabbable.name}");
-					_couldGrab.Add(grabbable);
+					//Debug.Log($"You could grab {grabbable.name}");
+					_couldGrab.Add(other);
 				}
 			}
 		}
@@ -48,16 +52,11 @@ namespace Barliesque.VRGrab
 
 		private void OnTriggerExit(Collider other)
 		{
-			// Is this a Grabbable object in our list?
-			var grabbable = other.GetComponentInParent<Grabbable>();
-			if (grabbable != null && _couldGrab.Contains(grabbable))
+			// Is this a Grabbable collider in our list?
+			if (_couldGrab.Contains(other))
 			{
-				Debug.Log($"You can't grab {grabbable.name}");
-				_couldGrab.Remove(grabbable);
-				if (_couldGrab.Count == 0 && _grabbed == null)
-				{
-					_handColliders?.SetActive(true);
-				}
+				//Debug.Log($"You can't grab {grabbable.name}");
+				_couldGrab.Remove(other);
 			}
 		}
 
@@ -68,19 +67,21 @@ namespace Barliesque.VRGrab
 			{
 				if (_couldGrab.Count == 1)
 				{
-					_grabbed = _couldGrab[0];
+					_grabbed = _couldGrab[0].GetComponentInParent<Grabbable>();
 				}
 				else
 				{
 					_grabbed = FindClosest();
 				}
 
+				Debug.Log($"Attempt to grab: {_grabbed?.name ?? "NULL"}  Out of {_couldGrab.Count} possible");
+
 				if (_grabbed != null)
 				{
 					//TODO  Tell _grabbed that it's been grabbed -- grab may be cancelled via OnGrabbed callback
 
 					_joint.GrabbedBody = _grabbed.Body;
-					_handColliders?.SetActive(false);
+					_handColliders.SetActive(false);
 
 					//TODO  Don't allow grabbing of an object that is already grabbed?  
 					//TODO  ...Or maybe the second hand *must* use HandToObject locking!
@@ -95,10 +96,20 @@ namespace Barliesque.VRGrab
 				Debug.Log($"You just released {_grabbed?.name}");
 				_grabbed = null;
 				_joint.GrabbedBody = null;
-				if (_couldGrab.Count == 0 && _grabbed == null)
+				_colliderReactivationTimer = _colliderReactivationDelay;
+			}
+
+			if (_grabbed == null && !_handColliders.activeSelf)
+			{
+				if (_couldGrab.Count == 0)
 				{
-					_handColliders?.SetActive(true);
+					_handColliders.SetActive(true);
 				}
+				//_colliderReactivationTimer -= Time.deltaTime;
+				//if (_colliderReactivationTimer <= 0f)
+				//{
+				//	_handColliders.SetActive(true);
+				//}
 			}
 		}
 
@@ -131,8 +142,7 @@ namespace Barliesque.VRGrab
 
 				if (hit.collider != null)
 				{
-					var other = hit.collider.GetComponentInParent<Grabbable>();
-					if (other == couldGrab && hit.distance < closestDist)
+					if (hit.collider == couldGrab && hit.distance < closestDist)
 					{
 						// Hit reached intended target, and it's closer than any other tested
 						closest = i;
@@ -141,7 +151,13 @@ namespace Barliesque.VRGrab
 				}
 			}
 
-			return (closest >= 0) ? _couldGrab[closest] : null;
+			if (closest >= 0)
+			{
+				return _couldGrab[closest].GetComponentInParent<Grabbable>();
+			}
+
+			Debug.LogError($"Couldn't find closest Grabbable out of {_couldGrab.Count} possible!");
+			return null;
 		}
 
 
