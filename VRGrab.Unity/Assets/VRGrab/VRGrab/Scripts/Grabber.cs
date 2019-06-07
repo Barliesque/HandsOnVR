@@ -6,7 +6,7 @@ namespace Barliesque.VRGrab
 {
 
 	/// <summary>
-	/// Component in hands that handles the mechanics of grabbing objects.
+	/// Component in hands that handles the mechanics of grabbing objects.  (See: Grabbable.cs)
 	/// </summary>
 	public class Grabber : MonoBehaviour
 	{
@@ -21,9 +21,6 @@ namespace Barliesque.VRGrab
 		Grabbable _grabbed;
 		RaycastHit[] _hits = new RaycastHit[3];
 		GrabJoint _joint;
-
-		float _colliderReactivationTimer;
-		const float _colliderReactivationDelay = 1f;
 
 
 		private void Awake()
@@ -74,7 +71,7 @@ namespace Barliesque.VRGrab
 					_grabbed = FindClosest();
 				}
 
-				Debug.Log($"Attempt to grab: {_grabbed?.name ?? "NULL"}  Out of {_couldGrab.Count} possible");
+				//Debug.Log($"Attempt to grab: {_grabbed?.name ?? "NULL"}  Out of {_couldGrab.Count} possible");
 
 				if (_grabbed != null)
 				{
@@ -87,16 +84,15 @@ namespace Barliesque.VRGrab
 					//TODO  ...Or maybe the second hand *must* use HandToObject locking!
 					//TODO  ...In which case, if the first hand releases, the second hand may be upgraded to ObjectToHand locking
 
-					Debug.Log($"You just grabbed {_grabbed.name}");
+					//Debug.Log($"You just grabbed {_grabbed.name}");
 				}
 			}
 
 			else if (_grabbed != null && _hand.Grip.Ended)
 			{
-				Debug.Log($"You just released {_grabbed?.name}");
+				//Debug.Log($"You just released {_grabbed?.name}");
 				_grabbed = null;
 				_joint.GrabbedBody = null;
-				_colliderReactivationTimer = _colliderReactivationDelay;
 			}
 
 			if (_grabbed == null && !_handColliders.activeSelf)
@@ -105,11 +101,6 @@ namespace Barliesque.VRGrab
 				{
 					_handColliders.SetActive(true);
 				}
-				//_colliderReactivationTimer -= Time.deltaTime;
-				//if (_colliderReactivationTimer <= 0f)
-				//{
-				//	_handColliders.SetActive(true);
-				//}
 			}
 		}
 

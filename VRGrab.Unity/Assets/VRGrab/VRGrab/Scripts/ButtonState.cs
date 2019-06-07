@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Barliesque.VRGrab
 {
-	[Serializable]  // Open an Inspector panel in debug mode to monitor the state values
+	[Serializable]  // Open an Inspector panel in debug mode to monitor the state values in HandController
 	public class ButtonState
 	{
 		float _analog;

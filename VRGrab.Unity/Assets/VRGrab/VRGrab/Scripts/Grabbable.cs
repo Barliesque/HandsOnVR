@@ -3,11 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-#pragma warning disable 67  // Event is never used (yet)
+#pragma warning disable 67  // Event is never used (yet!)
+
 
 namespace Barliesque.VRGrab
 {
 
+	/// <summary>
+	/// Make an object available to be picked up with the player's hands.  (See: Grabber.cs)
+	/// </summary>
 	[RequireComponent(typeof(Rigidbody))]
 	public class Grabbable : MonoBehaviour
 	{

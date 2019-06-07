@@ -1,18 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 namespace Barliesque.VRGrab
 {
 	/// <summary>
-	/// 
+	/// Bring a grabbed object to the hand, in a non-kinematic way
 	/// </summary>
 	public class GrabJoint : MonoBehaviour
 	{
 		public Rigidbody GrabbedBody;
 		public Transform TargetAnchor;
-		public float TargetDist = 0f;
 		public float MoveSpeed = 60f;
 		[Range(0f,1f)] public float TurnSpeed = 0.9f;
 		[SerializeField] Rigidbody _hand;
