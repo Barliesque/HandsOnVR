@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Hands_Ghost
+  m_Shader: {fileID: 4800000, guid: e561bcd7873846743aaa0656b919a7b5, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Floats:
+    - _Emissive: 0
+    - _GlowAmount: 0.8
+    - _Opacity: 0.4
+    - _RimEffect: 0.527
+    - __dirty: 0
+    m_Colors:
+    - _Color: {r: 0.6132076, g: 0.505197, b: 0.2574315, a: 1}
+    - _FillColor: {r: 0, g: 0.14657834, b: 0.21568628, a: 1}
+    - _GlowColor: {r: 0.21568626, g: 0.47921416, b: 1, a: 1}
+    - _LightSource: {r: 0, g: 1, b: 0, a: 0}
+    - _ShadowColor: {r: 0.08775366, g: 0.4248223, b: 0.6415094, a: 1}
