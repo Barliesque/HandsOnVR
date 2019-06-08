@@ -7,5 +7,7 @@ A Unity/C# library exploring grab mechanics, using Oculus Touch controllers.
 	- [ ] GrabBall
 	- [ ] GrabBlock
 - [x] Apply hand grab poses to solid hand
-- [ ] Implement grab anchors, with left/right hand specification
+- [ ] Bring grabbed object to GrabAnchor
+	- [ ] Attach solid hand to grabbed object instead of hand controller
 	- [ ] Anchor hands correctly to mug handle
+	- [ ] Allow GrabAnchors to specify left/right hand
