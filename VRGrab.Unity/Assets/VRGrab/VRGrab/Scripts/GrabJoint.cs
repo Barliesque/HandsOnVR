@@ -23,6 +23,7 @@ namespace Barliesque.VRGrab
 			}
 		}
 
+		//TODO  This technique works well for small objects, but larger objects will need a different approach, so that they are pulled from a specified anchor point - Consider option to use ConfigurableJoint for big heavy objects
 
 		void FixedUpdate()
 		{

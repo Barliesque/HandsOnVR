@@ -11,6 +11,8 @@ namespace Barliesque.VRGrab
 	public class Grabber : MonoBehaviour
 	{
 		[SerializeField] HandController _hand;
+		public HandController Hand { get { return _hand; } }
+
 		[SerializeField] Animator _handSolid;
 		[SerializeField] Animator _handGhost;
 		[SerializeField] GameObject _handColliders;
@@ -42,6 +44,7 @@ namespace Barliesque.VRGrab
 				{
 					//Debug.Log($"You could grab {grabbable.name}");
 					_couldGrab.Add(other);
+					//TODO  Add a small haptic click (as long as we're not grabbing something right now)
 				}
 			}
 		}
@@ -62,37 +65,25 @@ namespace Barliesque.VRGrab
 		{
 			if (_hand.Grip.Began && _couldGrab.Count > 0)
 			{
+				Grabbable grabbed;
 				if (_couldGrab.Count == 1)
 				{
-					_grabbed = _couldGrab[0].GetComponentInParent<Grabbable>();
+					grabbed = _couldGrab[0].GetComponentInParent<Grabbable>();
 				}
 				else
 				{
-					_grabbed = FindClosest();
+					grabbed = FindClosest();
 				}
 
-				//Debug.Log($"Attempt to grab: {_grabbed?.name ?? "NULL"}  Out of {_couldGrab.Count} possible");
-
-				if (_grabbed != null)
+				if (grabbed != null)
 				{
-					//TODO  Tell _grabbed that it's been grabbed -- grab may be cancelled via OnGrabbed callback
-
-					_joint.GrabbedBody = _grabbed.Body;
-					_handColliders.SetActive(false);
-
-					//TODO  Don't allow grabbing of an object that is already grabbed?  
-					//TODO  ...Or maybe the second hand *must* use HandToObject locking!
-					//TODO  ...In which case, if the first hand releases, the second hand may be upgraded to ObjectToHand locking
-
-					//Debug.Log($"You just grabbed {_grabbed.name}");
+					BeginGrab(grabbed);
 				}
 			}
 
 			else if (_grabbed != null && _hand.Grip.Ended)
 			{
-				//Debug.Log($"You just released {_grabbed?.name}");
-				_grabbed = null;
-				_joint.GrabbedBody = null;
+				EndGrab();
 			}
 
 			if (_grabbed == null && !_handColliders.activeSelf)
@@ -102,6 +93,27 @@ namespace Barliesque.VRGrab
 					_handColliders.SetActive(true);
 				}
 			}
+		}
+
+
+		void BeginGrab(Grabbable grabbed)
+		{
+			if (grabbed.TryGrab(this))
+			{
+				_grabbed = grabbed;
+				_joint.GrabbedBody = _grabbed.Body;
+				_handColliders.SetActive(false);
+				_handSolid.SetBool(_grabbed.GrabPoseID, true);
+			}
+		}
+
+
+		void EndGrab()
+		{
+			//Debug.Log($"You just released {_grabbed?.name}");
+			_handSolid.SetBool(_grabbed.GrabPoseID, false);
+			_grabbed = null;
+			_joint.GrabbedBody = null;
 		}
 
 

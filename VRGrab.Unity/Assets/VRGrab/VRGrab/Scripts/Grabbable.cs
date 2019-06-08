@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-#pragma warning disable 67  // Event is never used (yet!)
-
 
 namespace Barliesque.VRGrab
 {
@@ -23,8 +21,7 @@ namespace Barliesque.VRGrab
 		[SerializeField] string _grabPose;
 		public int GrabPoseID { get; private set; }
 
-
-		public HandController GrabbedBy {get; private set;}
+		public Grabber GrabbedBy {get; private set;}
 
 
 		/// <summary>
@@ -32,7 +29,7 @@ namespace Barliesque.VRGrab
 		/// </summary>
 		[Obsolete("Not implemented yet!")]
 		public event GrabHandler OnGrabbed;
-		public delegate bool GrabHandler(HandController grabbedBy);
+		public delegate bool GrabHandler(Grabbable grabbed, Grabber grabbedBy);
 
 		public Rigidbody Body { get; private set; }
 
@@ -40,6 +37,22 @@ namespace Barliesque.VRGrab
 		{
 			GrabPoseID = Animator.StringToHash(_grabPose);
 			Body = GetComponent<Rigidbody>();
+		}
+
+		//TODO  Consider adding option:  Allow one hand to grab object from the other?  Or allow *both* hands to grab simultaneously?
+
+		/// <summary>
+		/// This object is being grabbed. Confirmation is returned whether grab is allowed.
+		/// </summary>
+		/// <param name="grabbedBy"></param>
+		/// <returns></returns>
+		internal virtual bool TryGrab(Grabber grabbedBy)
+		{
+			bool allowed = OnGrabbed?.Invoke(this, grabbedBy) ?? true;
+			if (allowed) {
+				GrabbedBy = grabbedBy;
+			}
+			return allowed;
 		}
 
 	}

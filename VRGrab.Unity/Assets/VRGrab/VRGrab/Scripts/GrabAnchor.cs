@@ -19,7 +19,7 @@ namespace Barliesque.VRGrab
 			Either = 3
 		}
 
-		[SerializeField] bool _reorientate;
+		[SerializeField] bool _reorientate = true;
 
 
 		//TODO  Implement GrabAnchors
