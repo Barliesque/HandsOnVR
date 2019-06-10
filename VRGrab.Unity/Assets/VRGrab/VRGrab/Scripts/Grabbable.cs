@@ -39,7 +39,8 @@ namespace Barliesque.VRGrab
 			Body = GetComponent<Rigidbody>();
 		}
 
-		//TODO  Consider adding option:  Allow one hand to grab object from the other?  Or allow *both* hands to grab simultaneously?
+		//TODO  Find all Child GrabAnchors.  When grab is initiated, pass to Grabber the transform of the nearest GrabAnchor to the Grabber's position (or the Grabber's transform if there are no GrabAnchors)
+		//TODO  Consider adding option:  Allow one hand to grab object from the other?  Or allow *both* hands to grab simultaneously? ...or *require* both hands
 
 		/// <summary>
 		/// This object is being grabbed. Confirmation is returned whether grab is allowed.
