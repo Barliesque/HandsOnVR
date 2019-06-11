@@ -13,13 +13,16 @@ namespace Barliesque.VRGrab
 	[RequireComponent(typeof(Rigidbody))]
 	public class Grabbable : MonoBehaviour
 	{
-		[Tooltip("Show should this object and the grabbing hand be connected?")]
-		[SerializeField] GrabbableLockType _lockType;
-		public GrabbableLockType LockType { get { return _lockType; } }
+		//[Tooltip("How should this object and the grabbing hand be connected?")]
+		//[SerializeField] GrabbableLockType _lockType;
+		//public GrabbableLockType LockType { get { return _lockType; } }
 
 		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While this object is being grabbed, the specified parameter will be set to true.")]
 		[SerializeField] string _grabPose;
-		public int GrabPoseID { get; private set; }
+		public int GrabPoseID { get; private set; } // TODO Check for override in current anchor
+
+		[SerializeField] bool _orientToHand = true;
+		public bool OrientToHand { get { return _orientToHand; } } // TODO Check for override in current anchor
 
 		public Grabber GrabbedBy {get; private set;}
 
@@ -33,10 +36,15 @@ namespace Barliesque.VRGrab
 
 		public Rigidbody Body { get; private set; }
 
+		GrabAnchor[] _grabAnchors;
+		int _currentAnchor = -1;
+
+
 		virtual protected void Start()
 		{
 			GrabPoseID = Animator.StringToHash(_grabPose);
 			Body = GetComponent<Rigidbody>();
+			_grabAnchors = GetComponentsInChildren<GrabAnchor>();
 		}
 
 		//TODO  Find all Child GrabAnchors.  When grab is initiated, pass to Grabber the transform of the nearest GrabAnchor to the Grabber's position (or the Grabber's transform if there are no GrabAnchors)
@@ -47,11 +55,26 @@ namespace Barliesque.VRGrab
 		/// </summary>
 		/// <param name="grabbedBy"></param>
 		/// <returns></returns>
-		internal virtual bool TryGrab(Grabber grabbedBy)
+		internal virtual bool TryGrab(Grabber grabbedBy, out Transform anchor)
 		{
 			bool allowed = OnGrabbed?.Invoke(this, grabbedBy) ?? true;
 			if (allowed) {
 				GrabbedBy = grabbedBy;
+				if (_grabAnchors.Length == 0)
+				{
+					anchor = this.transform;
+					_currentAnchor = -1;
+				}
+				else
+				{
+					//TODO  find which anchor is closest to the Grabber
+					anchor = _grabAnchors[0].transform;
+					_currentAnchor = 0;
+				}
+			} else
+			{
+				anchor = null;
+				_currentAnchor = -1;
 			}
 			return allowed;
 		}
@@ -59,10 +82,10 @@ namespace Barliesque.VRGrab
 	}
 
 
-	public enum GrabbableLockType
-	{
-		ObjectToHand, HandToObject
-	}
+	//public enum GrabbableLockType
+	//{
+	//	ObjectToHand, HandToObject
+	//}
 
 
 }

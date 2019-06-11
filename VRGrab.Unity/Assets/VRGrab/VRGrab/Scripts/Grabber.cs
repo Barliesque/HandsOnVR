@@ -15,6 +15,7 @@ namespace Barliesque.VRGrab
 
 		[SerializeField] Animator _handSolid;
 		[SerializeField] Animator _handGhost;
+		[SerializeField] MatchTransform _solidHandMatcher;
 		[SerializeField] GameObject _handColliders;
 		[SerializeField] Grabber _otherHand;
 		[SerializeField] LayerMask _grabbableLayers = 0x7FFFFFFF;
@@ -93,15 +94,31 @@ namespace Barliesque.VRGrab
 					_handColliders.SetActive(true);
 				}
 			}
+
+			if (_grabbed != null && _solidHandMatcher.Transition < 1f)
+			{
+				_solidHandMatcher.Transition = Mathf.Clamp01(_solidHandMatcher.Transition + Time.unscaledDeltaTime * 2f);
+			}
+			if (_grabbed == null && _solidHandMatcher.Transition > 0f)
+			{
+				_solidHandMatcher.Transition = Mathf.Clamp01(_solidHandMatcher.Transition - Time.unscaledDeltaTime * 2f);
+				if (_solidHandMatcher.Transition == 0f)
+				{
+					_solidHandMatcher.SecondTarget = null;
+				}
+			}
 		}
 
 
 		void BeginGrab(Grabbable grabbed)
 		{
-			if (grabbed.TryGrab(this))
+			Transform anchor;
+			if (grabbed.TryGrab(this, out anchor))
 			{
 				_grabbed = grabbed;
 				_joint.GrabbedBody = _grabbed.Body;
+				_joint.GrabbedAnchor = anchor;
+				_solidHandMatcher.SecondTarget = anchor;
 				_handColliders.SetActive(false);
 				_handSolid.SetBool(_grabbed.GrabPoseID, true);
 			}
@@ -114,6 +131,7 @@ namespace Barliesque.VRGrab
 			_handSolid.SetBool(_grabbed.GrabPoseID, false);
 			_grabbed = null;
 			_joint.GrabbedBody = null;
+			_solidHandMatcher.SecondTarget = _solidHandMatcher.transform;
 		}
 
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#pragma warning disable //(WIP)
 
 namespace Barliesque.VRGrab
 {
@@ -19,17 +18,17 @@ namespace Barliesque.VRGrab
 			Either = 3
 		}
 
-		[SerializeField] bool _reorientate = true;
+		//TODO  Add option to override Grabbable's GrabPose
+		//TODO  Add option to override Grabbable's OrientToHand setting
 
+		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While this object is being grabbed, the specified parameter will be set to true.")]
+		[SerializeField] string _grabPose;
+		public int GrabPoseID { get; private set; }
+
+		[SerializeField] bool _orientToHand = true;
+		public bool OrientToHand { get { return _orientToHand; } }
 
 		//TODO  Implement GrabAnchors
-		
-
-
-		private void OnDrawGizmosSelected()
-		{
-			//TODO  Draw a wireframe of a hand mesh!
-		}
 
 	}
 }

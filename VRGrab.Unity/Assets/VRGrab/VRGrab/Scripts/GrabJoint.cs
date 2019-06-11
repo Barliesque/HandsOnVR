@@ -9,6 +9,7 @@ namespace Barliesque.VRGrab
 	public class GrabJoint : MonoBehaviour
 	{
 		public Rigidbody GrabbedBody;
+		public Transform GrabbedAnchor;
 		public Transform TargetAnchor;
 		public float MoveSpeed = 60f;
 		[Range(0f,1f)] public float TurnSpeed = 0.9f;
@@ -30,11 +31,11 @@ namespace Barliesque.VRGrab
 			if (GrabbedBody != null && _hand != null)
 			{
 				// Move object towards hand
-				var delta = (TargetAnchor.position - GrabbedBody.position) * (MoveSpeed / (1f + GrabbedBody.mass));
+				var delta = (TargetAnchor.position - GrabbedAnchor.position) * (MoveSpeed / (1f + GrabbedBody.mass));
 				GrabbedBody.velocity = delta + _hand.velocity; //TODO  Calculate hand velocity in HandController and use that instead
 
 				// Find the angular delta, and convert from Quaternion to Angle/Axis
-				var angDelta = TargetAnchor.rotation * Quaternion.Inverse(GrabbedBody.rotation);
+				var angDelta = TargetAnchor.rotation * Quaternion.Inverse(GrabbedAnchor.rotation);
 				float angle;
 				Vector3 axis;
 				angDelta.ToAngleAxis(out angle, out axis);

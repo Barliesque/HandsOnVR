@@ -10,9 +10,11 @@ namespace Barliesque.VRGrab
 	public class MatchTransform : MonoBehaviour
 	{
 
-		[SerializeField] Transform _copyFrom;
-		[SerializeField] bool _matchPosition = true;
-		[SerializeField] bool _matchRotation = true;
+		public Transform Target;
+		public bool MatchPosition = true;
+		public bool MatchRotation = true;
+		[Range(0,1)] public float Transition;
+		public Transform SecondTarget;
 
 		Transform _xform;
 
@@ -23,19 +25,31 @@ namespace Barliesque.VRGrab
 
 		void Update()
 		{
-			if (_copyFrom == null)
+			if (Target == null)
 			{
 				return;
 			}
 
-			if (_matchPosition)
+			if (SecondTarget == null)
 			{
-				_xform.position = _copyFrom.position;
-			}
-
-			if (_matchRotation)
+				if (MatchPosition)
+				{
+					_xform.position = Target.position;
+				}
+				if (MatchRotation)
+				{
+					_xform.rotation = Target.rotation;
+				}
+			} else
 			{
-				_xform.rotation = _copyFrom.rotation;
+				if (MatchPosition)
+				{
+					_xform.position = Vector3.Lerp(Target.position, SecondTarget.position, Transition);
+				}
+				if (MatchRotation)
+				{
+					_xform.rotation = Quaternion.Lerp(Target.rotation, SecondTarget.rotation, Transition);
+				}
 			}
 		}
 

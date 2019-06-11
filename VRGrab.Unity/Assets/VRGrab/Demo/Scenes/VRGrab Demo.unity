@@ -436,7 +436,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166062589}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6f5f17db88a02384a80a14f969f18a65, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -654,7 +654,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 378443091}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6f5f17db88a02384a80a14f969f18a65, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -733,8 +733,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5497e3d3685caf4a954a051bfe29b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lockType: 0
   _grabPose: GrabBlock
+  _orientToHand: 1
 --- !u!1 &462340453
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,7 +809,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 462583183}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6f5f17db88a02384a80a14f969f18a65, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -888,8 +888,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5497e3d3685caf4a954a051bfe29b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lockType: 0
   _grabPose: GrabBlock
+  _orientToHand: 1
 --- !u!1 &637944820
 GameObject:
   m_ObjectHideFlags: 0
@@ -930,7 +930,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 637944820}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6f5f17db88a02384a80a14f969f18a65, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1306,7 +1306,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1169014437}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6f5f17db88a02384a80a14f969f18a65, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1385,8 +1385,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5497e3d3685caf4a954a051bfe29b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lockType: 0
   _grabPose: GrabBall
+  _orientToHand: 1
 --- !u!1 &1203990385
 GameObject:
   m_ObjectHideFlags: 0
@@ -1427,7 +1427,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1203990385}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6f5f17db88a02384a80a14f969f18a65, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1663,7 +1663,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1411267900}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6f5f17db88a02384a80a14f969f18a65, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1768,7 +1768,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1479925936}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6f5f17db88a02384a80a14f969f18a65, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1914,7 +1914,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1573235302}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6f5f17db88a02384a80a14f969f18a65, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1993,8 +1993,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5497e3d3685caf4a954a051bfe29b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lockType: 0
   _grabPose: GrabBall
+  _orientToHand: 1
 --- !u!1 &1578356212
 GameObject:
   m_ObjectHideFlags: 0
@@ -2654,7 +2654,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1960065979}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6f5f17db88a02384a80a14f969f18a65, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -2733,8 +2733,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5497e3d3685caf4a954a051bfe29b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lockType: 0
   _grabPose: GrabBlock
+  _orientToHand: 1
 --- !u!1 &1999301179
 GameObject:
   m_ObjectHideFlags: 0
@@ -2775,7 +2775,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1999301179}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6f5f17db88a02384a80a14f969f18a65, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -3053,11 +3053,6 @@ PrefabInstance:
     - target: {fileID: 6749745923194086608, guid: d58714863f1afcb4abbfe31697671354,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5651741659843867705, guid: d58714863f1afcb4abbfe31697671354,
-        type: 3}
-      propertyPath: m_CollisionDetection
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
