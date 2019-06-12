@@ -64,15 +64,18 @@ namespace Barliesque.VRGrab
 
 		private void Update()
 		{
+			// Start grabbing an object?
 			if (_hand.Grip.Began && _couldGrab.Count > 0)
 			{
 				Grabbable grabbed;
 				if (_couldGrab.Count == 1)
 				{
+					// Only one object to grab
 					grabbed = _couldGrab[0].GetComponentInParent<Grabbable>();
 				}
 				else
 				{
+					// Find the closest object to grab
 					grabbed = FindClosest();
 				}
 
@@ -82,11 +85,13 @@ namespace Barliesque.VRGrab
 				}
 			}
 
+			// Grab release?
 			else if (_grabbed != null && _hand.Grip.Ended)
 			{
 				EndGrab();
 			}
 
+			// After grab has been release, wait for hand to move away before reactivating colliders
 			if (_grabbed == null && !_handColliders.activeSelf)
 			{
 				if (_couldGrab.Count == 0)
@@ -97,10 +102,13 @@ namespace Barliesque.VRGrab
 
 			if (_grabbed != null && _solidHandMatcher.Transition < 1f)
 			{
+				// Move the solid hand to the grabbed object
 				_solidHandMatcher.Transition = Mathf.Clamp01(_solidHandMatcher.Transition + Time.unscaledDeltaTime * 2f);
 			}
+
 			if (_grabbed == null && _solidHandMatcher.Transition > 0f)
 			{
+				// Move the solid hand back to HandController
 				_solidHandMatcher.Transition = Mathf.Clamp01(_solidHandMatcher.Transition - Time.unscaledDeltaTime * 2f);
 				if (_solidHandMatcher.Transition == 0f)
 				{
