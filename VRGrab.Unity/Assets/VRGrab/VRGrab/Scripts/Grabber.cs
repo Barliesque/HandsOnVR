@@ -8,6 +8,7 @@ namespace Barliesque.VRGrab
 	/// <summary>
 	/// Component in hands that handles the mechanics of grabbing objects.  (See: Grabbable.cs)
 	/// </summary>
+	[RequireComponent(typeof(GrabJoint))]
 	public class Grabber : MonoBehaviour
 	{
 		[SerializeField] HandController _hand;
@@ -24,6 +25,7 @@ namespace Barliesque.VRGrab
 		Grabbable _grabbed;
 		RaycastHit[] _hits = new RaycastHit[3];
 		GrabJoint _joint;
+
 
 
 		private void Awake()
@@ -81,6 +83,7 @@ namespace Barliesque.VRGrab
 
 				if (grabbed != null)
 				{
+					//TODO  In the event the grab was unsuccessful, consider grabbing the next closest instead
 					BeginGrab(grabbed);
 				}
 			}
@@ -137,6 +140,7 @@ namespace Barliesque.VRGrab
 		{
 			//Debug.Log($"You just released {_grabbed?.name}");
 			_handSolid.SetBool(_grabbed.GrabPoseID, false);
+			_grabbed.Release(this);
 			_grabbed = null;
 			_joint.GrabbedBody = null;
 			_solidHandMatcher.SecondTarget = _solidHandMatcher.transform;

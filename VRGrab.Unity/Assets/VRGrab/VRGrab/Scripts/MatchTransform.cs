@@ -4,7 +4,7 @@
 namespace Barliesque.VRGrab
 {
 	/// <summary>
-	/// Copies the world position and/or orientation from another transform to the local transform.
+	/// Copies the world position and/or orientation from another transform to the local transform.  A second target transform may be set and transitioned to from the first.
 	/// </summary>
 	[ExecuteInEditMode]
 	public class MatchTransform : MonoBehaviour

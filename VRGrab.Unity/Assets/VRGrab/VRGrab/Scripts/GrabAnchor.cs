@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 namespace Barliesque.VRGrab
@@ -27,8 +25,6 @@ namespace Barliesque.VRGrab
 
 		[SerializeField] bool _orientToHand = true;
 		public bool OrientToHand { get { return _orientToHand; } }
-
-		//TODO  Implement GrabAnchors
 
 	}
 }

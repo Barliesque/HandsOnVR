@@ -15,8 +15,6 @@ namespace Barliesque.VRGrab
 		[SerializeField] Hand _hand;
 		public Hand Hand { get { return _hand; } }
 
-		[SerializeField] MatchTransform _handSolid;
-
 		// Note: Open an Inspector panel in debug mode to monitor these ButtonState values at runtime
 
 		public ButtonState Grip { get; private set; } = new ButtonState();
@@ -24,7 +22,6 @@ namespace Barliesque.VRGrab
 		public ButtonState AorX { get; private set; } = new ButtonState();
 		public ButtonState BorY { get; private set; } = new ButtonState();
 		public ButtonState ThumbRest { get; private set; } = new ButtonState();
-
 
 
 		private void Update()
