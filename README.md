@@ -13,12 +13,20 @@ Much of the aforementioned is work in progress.  Stay tuned for further developm
 
 
 ### TO DO LIST
-- [ ] Create hand animations:
+- [x] Create hand animations:
 	- [x] GrabMugHandle
-	- [ ] GrabBall
-	- [ ] GrabBlock
+	- [x] GrabBall
+	- [x] GrabBlock
 - [x] Apply hand grab poses to solid hand
-- [ ] Bring grabbed object's GrabAnchor to the hand (rather than Grabbable)
-	- [ ] Attach solid hand to grabbed object instead of hand controller
-	- [ ] Anchor hands correctly to mug handle
+- [x] Bring grabbed object's GrabAnchor to the hand (rather than Grabbable)
+	- [x] Attach solid hand to grabbed object instead of hand controller
+	- [x] Anchor hands correctly to mug handle
 	- [ ] Allow GrabAnchors to specify hand: left/right/either
+	- [ ] Allow GrabAnchors to override poseID and hand orientation
+- [ ] Add options for when an opbject is grabbed by both hands
+- [ ] Add test subject: A lever to pull
+- [ ] Implement standard movement of fingers when not grabbing
+- [ ] Add Haptics support
+- [ ] Add support for secondary grabbable (can only be grabbed after its parent object is grabbed)
+- [ ] Add test subject: A grenade and its pin
+
