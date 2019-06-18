@@ -8,6 +8,7 @@ namespace Barliesque.VRGrab
 	/// </summary>
 	public class GrabAnchor : MonoBehaviour
 	{
+		//TODO  Consider adding a public flag that indicates if this anchor is being grabbed
 
 		public enum Hand
 		{
@@ -17,9 +18,20 @@ namespace Barliesque.VRGrab
 			Either = 3
 		}
 
+		public enum Order
+		{
+			FirstOrSecond = 0,
+			FirstOnly = 1,
+			SecondOnly = 2
+		}
+
 		[Tooltip("Restrict which hand can grab the object from this GrabAnchor?")]
 		[SerializeField] Hand _allowHand = Hand.Either;
 		public Hand AllowHand { get { return _allowHand; } }
+
+		[Tooltip("Restrict whether this anchor may be grabbed first, or second?")]
+		[SerializeField] Order _grabOrder = Order.FirstOrSecond;
+		public Order GrabOrder { get { return _grabOrder; } }
 
 		[Tooltip("Should this GrabAnchor use a different Grab Pose than specified by Grabbable?")]
 		[SerializeField] bool _overridePose;

@@ -11,9 +11,11 @@ namespace Barliesque.VRGrab
 		public Rigidbody GrabbedBody;
 		public Transform GrabbedAnchor;
 		public Transform TargetAnchor;
-		public float MoveSpeed = 60f;
-		[Range(0f,1f)] public float TurnSpeed = 0.9f;
 		[SerializeField] Rigidbody _hand;
+		[Range(0f,1f)] public float Influence = 1f;
+
+		const float _moveSpeed = 60f;
+		const float _turnSpeed = 0.9f;
 
 
 		private void Start()
@@ -31,8 +33,10 @@ namespace Barliesque.VRGrab
 			if (GrabbedBody != null && _hand != null)
 			{
 				// Move object towards hand
-				var delta = (TargetAnchor.position - GrabbedAnchor.position) * (MoveSpeed / (1f + GrabbedBody.mass));
-				GrabbedBody.velocity = delta + _hand.velocity; //TODO  Calculate hand velocity in HandController and use that instead
+				var delta = (TargetAnchor.position - GrabbedAnchor.position) * (_moveSpeed / (1f + GrabbedBody.mass));
+				//TODO  Calculate hand velocity in HandController and use that instead
+				GrabbedBody.velocity = Vector3.Lerp(GrabbedBody.velocity, delta + _hand.velocity, Influence);
+
 
 				// Find the angular delta, and convert from Quaternion to Angle/Axis
 				var angDelta = TargetAnchor.rotation * Quaternion.Inverse(GrabbedAnchor.rotation);
@@ -44,7 +48,8 @@ namespace Barliesque.VRGrab
 				if (!float.IsInfinity(axis.x))
 				{
 					if (angle > 180f) angle -= 360f;
-					GrabbedBody.angularVelocity = (TurnSpeed * Mathf.Deg2Rad * angle / Time.fixedUnscaledDeltaTime) * axis.normalized;
+					var newAngVel = (_turnSpeed * Mathf.Deg2Rad * angle / Time.fixedUnscaledDeltaTime) * axis.normalized;
+					GrabbedBody.angularVelocity = Vector3.Lerp(GrabbedBody.angularVelocity, newAngVel, Influence);
 				}
 			}
 		}

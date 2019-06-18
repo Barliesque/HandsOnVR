@@ -12,6 +12,7 @@ namespace Barliesque.VRGrab.Editor
 		protected override void CustomInspector(GrabAnchor inst)
 		{
 			PropertyField("_allowHand");
+			PropertyField("_grabOrder");
 
 			if (PropertyField("_overridePose").boolValue)
 			{

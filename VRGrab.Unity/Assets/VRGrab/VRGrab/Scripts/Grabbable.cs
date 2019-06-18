@@ -17,13 +17,15 @@ namespace Barliesque.VRGrab
 		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While this object is being grabbed, the specified parameter will be set to true.")]
 		[SerializeField] string _grabPose;
 		int _grabPoseID;
-		public int GrabPoseID {
+		public int GrabPoseID
+		{
 			get {
 				// Check for override in current anchor
 				if (_currentAnchor >= 0 && _grabAnchors[_currentAnchor].OverridePose)
 				{
 					return _grabAnchors[_currentAnchor].GrabPoseID;
-				} else
+				}
+				else
 				{
 					return _grabPoseID;
 				}
@@ -33,21 +35,31 @@ namespace Barliesque.VRGrab
 
 
 		[SerializeField] bool _orientToHand = true;
-		public bool OrientToHand {
+		public bool OrientToHand
+		{
 			get {
 				// Check for override in current anchor
 				if (_currentAnchor >= 0 && _grabAnchors[_currentAnchor].OverridePose)
 				{
 					return _grabAnchors[_currentAnchor].OrientToHand;
-				} else
+				}
+				else
 				{
 					return _orientToHand;
 				}
 			}
 		}
 
+		public enum SecondGrabBehavior
+		{
+			NoSecondGrab, TransferToSecondGrab, AllowBothHands  //, RequireBothHands
+		}
+		[SerializeField] SecondGrabBehavior _secondGrabBehavior = SecondGrabBehavior.TransferToSecondGrab;
+		public SecondGrabBehavior SecondGrab { get { return _secondGrabBehavior; } }
+
 
 		public Grabber GrabbedBy { get; private set; }
+		public Grabber GrabbedBySecond { get; private set; }
 
 
 		/// <summary>
@@ -80,7 +92,6 @@ namespace Barliesque.VRGrab
 			_grabAnchors = GetComponentsInChildren<GrabAnchor>();
 		}
 
-		//TODO  Consider adding option:  Allow one hand to grab object from the other?  Or allow *both* hands to grab simultaneously? ...or *require* both hands
 
 		/// <summary>
 		/// This object is being grabbed. Confirmation is returned whether grab is allowed.
@@ -91,16 +102,37 @@ namespace Barliesque.VRGrab
 		{
 			if (GrabbedBy != null)
 			{
-				// This object is already grabbed.  Reject second grab.
-				//TODO  Add options to:  Swap from one hand to the other;  Object stays in first hand that grabbed;  ...or object that requires both hands to be lifted
-
-				anchor = null;
-				return false;
+				// This object is already grabbed...
+				if (_secondGrabBehavior == SecondGrabBehavior.NoSecondGrab)
+				{
+					// ...Reject second grab.
+					anchor = null;
+					return false;
+				}
+				if (_secondGrabBehavior == SecondGrabBehavior.TransferToSecondGrab)
+				{
+					// ...Release the first and re-grab with the second.
+					GrabbedBy.Release();
+				}
 			}
+
 			bool allowed = OnGrabbed?.Invoke(this, grabbedBy) ?? true;
 			if (allowed)
 			{
-				GrabbedBy = grabbedBy;
+				Transform anchorAlreadyGrabbed = null;
+
+				// Is this the first hand grabbing this object?
+				if (GrabbedBy == null)
+				{
+					GrabbedBy = grabbedBy;
+				}
+				else
+				{
+					GrabbedBySecond = grabbedBy;
+					anchorAlreadyGrabbed = grabbedBy.GrabbedAnchor;
+				}
+
+				// By what anchor will it be grabbed?
 				if (_grabAnchors.Length == 0)
 				{
 					anchor = this.transform;
@@ -108,14 +140,24 @@ namespace Barliesque.VRGrab
 				}
 				else
 				{
-					_currentAnchor = FindClosestAnchor();
+					_currentAnchor = FindClosestAnchor(grabbedBy, anchorAlreadyGrabbed);
 					if (_currentAnchor >= 0)
 					{
 						anchor = _grabAnchors[_currentAnchor].transform;
-					} else
+					}
+					else
 					{
 						// No valid GrabAnchor available.
 						anchor = null;
+
+						if (GrabbedBySecond)
+						{
+							GrabbedBySecond = null;
+						} else
+						{
+							GrabbedBy = null;
+						}
+
 						return false;
 					}
 				}
@@ -130,21 +172,26 @@ namespace Barliesque.VRGrab
 
 
 
-		private int FindClosestAnchor()
+		private int FindClosestAnchor(Grabber grabbedBy, Transform alreadyGrabbed)
 		{
 			//  Find which anchor is closest to the Grabber
 			int closest = -1;
 			float bestScore = float.MinValue;
 
-			var grabbedByHand = GrabbedBy.Hand.Hand;
-			var grabberPos = GrabbedBy.transform.position;
-			var grabberRot = GrabbedBy.transform.rotation;
+			var grabbedByHand = grabbedBy.Hand.Hand;
+			var grabberPos = grabbedBy.transform.position;
+			var grabberRot = grabbedBy.transform.rotation;
+
+			bool isSecond = (GrabbedBySecond != null);
 
 			for (int i = 0; i < _grabAnchors.Length; i++)
 			{
 				var anchor = _grabAnchors[i];
 
 				// Make sure the anchor is available to this Grabber
+				if (anchor == alreadyGrabbed) continue;
+				if (anchor.GrabOrder == GrabAnchor.Order.FirstOnly && isSecond) continue;
+				if (anchor.GrabOrder == GrabAnchor.Order.SecondOnly && !isSecond) continue;
 				if (anchor.AllowHand == GrabAnchor.Hand.None || !anchor.enabled) continue;
 				if (anchor.AllowHand == GrabAnchor.Hand.Left && grabbedByHand == Hand.Right) continue;
 				if (anchor.AllowHand == GrabAnchor.Hand.Right && grabbedByHand == Hand.Left) continue;
@@ -155,7 +202,8 @@ namespace Barliesque.VRGrab
 				if (!OrientToHand)
 				{
 					oriScore = 1f;
-				} else
+				}
+				else
 				{
 					oriScore = OrientationScore(anchor.transform.rotation, grabberRot);
 				}
@@ -191,10 +239,25 @@ namespace Barliesque.VRGrab
 
 		internal virtual void Release(Grabber fromGrabber)
 		{
-			if (GrabbedBy == fromGrabber)
+			if (GrabbedBySecond == fromGrabber)
 			{
-				GrabbedBy = null;
-				OnReleased?.Invoke(this, fromGrabber);
+				// Second hand released only
+				GrabbedBySecond = null;
+			}
+			else if (GrabbedBy == fromGrabber)
+			{
+				if (GrabbedBySecond)
+				{
+					// First hand released, so second is now first and only
+					GrabbedBy = GrabbedBySecond;
+					GrabbedBySecond = null;
+				}
+				else
+				{
+					// First (and only) hand released
+					GrabbedBy = null;
+					OnReleased?.Invoke(this, fromGrabber);
+				}
 			}
 		}
 

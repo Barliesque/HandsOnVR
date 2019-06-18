@@ -49,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _grabPose: GrabMugHandle
   _orientToHand: 1
+  _secondGrabBehavior: 0
 --- !u!54 &5651741659843867705
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1531,8 +1532,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hand: 3
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
   _grabPose: 
+  _overrideOrientToHand: 0
   _orientToHand: 1
 --- !u!1 &4476556220920335294
 GameObject:

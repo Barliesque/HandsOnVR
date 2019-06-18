@@ -26,6 +26,7 @@ namespace Barliesque.VRGrab
 		RaycastHit[] _hits = new RaycastHit[3];
 		GrabJoint _joint;
 
+		public Transform GrabbedAnchor { get { return _joint.GrabbedAnchor; } }
 
 
 		private void Awake()
@@ -83,7 +84,7 @@ namespace Barliesque.VRGrab
 
 				if (grabbed != null)
 				{
-					//TODO  In the event the grab was unsuccessful, consider grabbing the next closest instead
+					//TODO  In the event the grab was unsuccessful, consider grabbing the next closest instead...?
 					BeginGrab(grabbed);
 				}
 			}
@@ -94,7 +95,13 @@ namespace Barliesque.VRGrab
 				EndGrab();
 			}
 
-			// After grab has been release, wait for hand to move away before reactivating colliders
+			if (_grabbed != null)
+			{
+				// If grabbed by both hands, reduce influence of this grab joint
+				_joint.Influence = (_grabbed.GrabbedBySecond ? 0.5f : 1f);
+			}
+
+			// After grab has been released, wait for hand to move away before reactivating colliders
 			if (_grabbed == null && !_handColliders.activeSelf)
 			{
 				if (_couldGrab.Count == 0)
@@ -144,6 +151,12 @@ namespace Barliesque.VRGrab
 			_grabbed = null;
 			_joint.GrabbedBody = null;
 			_solidHandMatcher.SecondTarget = _solidHandMatcher.transform;
+		}
+
+
+		public void Release()
+		{
+			if (_grabbed != null) EndGrab();
 		}
 
 
