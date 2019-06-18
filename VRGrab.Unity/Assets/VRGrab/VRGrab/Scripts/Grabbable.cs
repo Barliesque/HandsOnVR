@@ -16,10 +16,36 @@ namespace Barliesque.VRGrab
 
 		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While this object is being grabbed, the specified parameter will be set to true.")]
 		[SerializeField] string _grabPose;
-		public int GrabPoseID { get; private set; } // TODO Check for override in current anchor
+		int _grabPoseID;
+		public int GrabPoseID {
+			get {
+				// Check for override in current anchor
+				if (_currentAnchor >= 0 && _grabAnchors[_currentAnchor].OverridePose)
+				{
+					return _grabAnchors[_currentAnchor].GrabPoseID;
+				} else
+				{
+					return _grabPoseID;
+				}
+			}
+			private set { _grabPoseID = value; }
+		}
+
 
 		[SerializeField] bool _orientToHand = true;
-		public bool OrientToHand { get { return _orientToHand; } } // TODO Check for override in current anchor
+		public bool OrientToHand {
+			get {
+				// Check for override in current anchor
+				if (_currentAnchor >= 0 && _grabAnchors[_currentAnchor].OverridePose)
+				{
+					return _grabAnchors[_currentAnchor].OrientToHand;
+				} else
+				{
+					return _orientToHand;
+				}
+			}
+		}
+
 
 		public Grabber GrabbedBy { get; private set; }
 
@@ -65,6 +91,7 @@ namespace Barliesque.VRGrab
 		{
 			if (GrabbedBy != null)
 			{
+				// This object is already grabbed.  Reject second grab.
 				//TODO  Add options to:  Swap from one hand to the other;  Object stays in first hand that grabbed;  ...or object that requires both hands to be lifted
 
 				anchor = null;
@@ -82,7 +109,15 @@ namespace Barliesque.VRGrab
 				else
 				{
 					_currentAnchor = FindClosestAnchor();
-					anchor = _grabAnchors[_currentAnchor].transform;
+					if (_currentAnchor >= 0)
+					{
+						anchor = _grabAnchors[_currentAnchor].transform;
+					} else
+					{
+						// No valid GrabAnchor available.
+						anchor = null;
+						return false;
+					}
 				}
 			}
 			else
@@ -100,13 +135,19 @@ namespace Barliesque.VRGrab
 			//  Find which anchor is closest to the Grabber
 			int closest = -1;
 			float bestScore = float.MinValue;
-			
+
+			var grabbedByHand = GrabbedBy.Hand.Hand;
 			var grabberPos = GrabbedBy.transform.position;
 			var grabberRot = GrabbedBy.transform.rotation;
 
 			for (int i = 0; i < _grabAnchors.Length; i++)
 			{
 				var anchor = _grabAnchors[i];
+
+				// Make sure the anchor is available to this Grabber
+				if (anchor.AllowHand == GrabAnchor.Hand.None || !anchor.enabled) continue;
+				if (anchor.AllowHand == GrabAnchor.Hand.Left && grabbedByHand == Hand.Right) continue;
+				if (anchor.AllowHand == GrabAnchor.Hand.Right && grabbedByHand == Hand.Left) continue;
 
 				// Calculate a score for the anchor, based on distance and orientation deltas
 				float distScore = 1f - Mathf.Clamp01((anchor.transform.position - grabberPos).magnitude / MaxAnchorDistance);
