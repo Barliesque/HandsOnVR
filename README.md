@@ -24,7 +24,9 @@ Much of the aforementioned is work in progress.  Stay tuned for further developm
 	- [x] Allow GrabAnchors to specify hand: left/right/either
 	- [x] Allow GrabAnchors to override poseID and hand orientation
 - [x] Add options for when an object is grabbed by both hands
+- [x] Add test subject: A two-handed object
 - [ ] Add test subject: A lever to pull
+- [ ] Add test subject: Large and heavy object
 - [ ] Implement standard movement of fingers when not grabbing
 - [ ] Add Haptics support
 - [ ] Add support for secondary grabbable (can only be grabbed after its parent object is grabbed)

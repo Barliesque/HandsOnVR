@@ -1,5 +1,103 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1989504506001506571
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 341000762030055252}
+  - component: {fileID: 1299451044928934532}
+  m_Layer: 0
+  m_Name: GrabAnchor (11)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &341000762030055252
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989504506001506571}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4959579408817796446}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
+--- !u!114 &1299451044928934532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989504506001506571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
+  _grabPose: GrabBlock
+  _overrideOrientToHand: 0
+  _orientToHand: 1
+--- !u!1 &3147893510219212698
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8480902329256483807}
+  - component: {fileID: 4748734869135944165}
+  m_Layer: 0
+  m_Name: GrabAnchor (6)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8480902329256483807
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3147893510219212698}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4959579408817796446}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 180}
+--- !u!114 &4748734869135944165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3147893510219212698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
+  _grabPose: GrabBlock
+  _overrideOrientToHand: 0
+  _orientToHand: 1
 --- !u!1 &3545878553178954377
 GameObject:
   m_ObjectHideFlags: 0
@@ -43,8 +141,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hand: 3
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
   _grabPose: GrabBlock
+  _overrideOrientToHand: 0
   _orientToHand: 1
 --- !u!1 &4384651030485643647
 GameObject:
@@ -89,8 +190,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hand: 3
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
   _grabPose: GrabBlock
+  _overrideOrientToHand: 0
   _orientToHand: 1
 --- !u!1 &4445116456637552924
 GameObject:
@@ -135,8 +239,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hand: 3
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
   _grabPose: GrabBlock
+  _overrideOrientToHand: 0
   _orientToHand: 1
 --- !u!1 &4959579408817796417
 GameObject:
@@ -176,6 +283,12 @@ Transform:
   - {fileID: 1730345482324076941}
   - {fileID: 8278293215623070157}
   - {fileID: 355752863152988254}
+  - {fileID: 8480902329256483807}
+  - {fileID: 8588373215559343149}
+  - {fileID: 4647181858978904680}
+  - {fileID: 6452004208829038482}
+  - {fileID: 6365692150355850029}
+  - {fileID: 341000762030055252}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -193,6 +306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _grabPose: GrabBlock
   _orientToHand: 1
+  _secondGrabBehavior: 1
 --- !u!54 &4959579408817796442
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -310,8 +424,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hand: 3
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
   _grabPose: GrabBlock
+  _overrideOrientToHand: 0
+  _orientToHand: 1
+--- !u!1 &7159673898326713219
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6452004208829038482}
+  - component: {fileID: 5612194251576351915}
+  m_Layer: 0
+  m_Name: GrabAnchor (9)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6452004208829038482
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7159673898326713219}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: -0.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4959579408817796446}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 180}
+--- !u!114 &5612194251576351915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7159673898326713219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
+  _grabPose: GrabBlock
+  _overrideOrientToHand: 0
   _orientToHand: 1
 --- !u!1 &7288259205900433546
 GameObject:
@@ -356,8 +522,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hand: 3
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
   _grabPose: GrabBlock
+  _overrideOrientToHand: 0
   _orientToHand: 1
 --- !u!1 &7814234246382723731
 GameObject:
@@ -402,6 +571,156 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hand: 3
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
   _grabPose: GrabBlock
+  _overrideOrientToHand: 0
+  _orientToHand: 1
+--- !u!1 &7947948195152872050
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6365692150355850029}
+  - component: {fileID: 2553844994967505587}
+  m_Layer: 0
+  m_Name: GrabAnchor (10)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6365692150355850029
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7947948195152872050}
+  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4959579408817796446}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 180}
+--- !u!114 &2553844994967505587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7947948195152872050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
+  _grabPose: GrabBlock
+  _overrideOrientToHand: 0
+  _orientToHand: 1
+--- !u!1 &8605423695348376629
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4647181858978904680}
+  - component: {fileID: 8410071361724663927}
+  m_Layer: 0
+  m_Name: GrabAnchor (8)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4647181858978904680
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8605423695348376629}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: 0.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4959579408817796446}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 180}
+--- !u!114 &8410071361724663927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8605423695348376629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
+  _grabPose: GrabBlock
+  _overrideOrientToHand: 0
+  _orientToHand: 1
+--- !u!1 &8876650277085224383
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8588373215559343149}
+  - component: {fileID: 5601760704837516227}
+  m_Layer: 0
+  m_Name: GrabAnchor (7)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8588373215559343149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8876650277085224383}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4959579408817796446}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
+--- !u!114 &5601760704837516227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8876650277085224383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _allowHand: 3
+  _grabOrder: 0
+  _overridePose: 0
+  _grabPose: GrabBlock
+  _overrideOrientToHand: 0
   _orientToHand: 1
