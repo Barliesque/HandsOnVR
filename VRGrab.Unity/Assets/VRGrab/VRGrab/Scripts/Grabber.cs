@@ -22,6 +22,8 @@ namespace Barliesque.VRGrab
 		[SerializeField] LayerMask _grabbableLayers = 0x7FFFFFFF;
 
 		List<Collider> _couldGrab = new List<Collider>();
+		//TODO  Keep a Dictionary of Grabbables as well -- with a counter of the number of colliders
+
 		Grabbable _grabbed;
 		RaycastHit[] _hits = new RaycastHit[3];
 		GrabJoint _joint;
@@ -48,7 +50,8 @@ namespace Barliesque.VRGrab
 				{
 					//Debug.Log($"You could grab {grabbable.name}");
 					_couldGrab.Add(other);
-					//TODO  Add a small haptic click (as long as we're not grabbing something right now)
+					//TODO  Add event: OnGrabbableEnter
+					//TODO  Add a small haptic click (as long as we're not grabbing something right now) -- do this in a separate component using above event
 				}
 			}
 		}
@@ -61,6 +64,9 @@ namespace Barliesque.VRGrab
 			{
 				//Debug.Log($"You can't grab {grabbable.name}");
 				_couldGrab.Remove(other);
+
+				//TODO  Add event: OnGrabbableExit
+
 			}
 		}
 
@@ -84,7 +90,6 @@ namespace Barliesque.VRGrab
 
 				if (grabbed != null)
 				{
-					//TODO  In the event the grab was unsuccessful, consider grabbing the next closest instead...?
 					BeginGrab(grabbed);
 				}
 			}
@@ -93,12 +98,6 @@ namespace Barliesque.VRGrab
 			else if (_grabbed != null && _hand.Grip.Ended)
 			{
 				EndGrab();
-			}
-
-			if (_grabbed != null)
-			{
-				// If grabbed by both hands, reduce influence of this grab joint
-				_joint.Influence = (_grabbed.GrabbedBySecond ? 0.5f : 1f);
 			}
 
 			// After grab has been released, wait for hand to move away before reactivating colliders
@@ -130,26 +129,61 @@ namespace Barliesque.VRGrab
 
 		void BeginGrab(Grabbable grabbed)
 		{
+			//TODO  Add event: OnBeginGrab
 			Transform anchor;
 			if (grabbed.TryGrab(this, out anchor))
 			{
 				_grabbed = grabbed;
-				_joint.GrabbedBody = _grabbed.Body;
-				_joint.GrabbedAnchor = anchor;
+
+				if (grabbed.GrabbedBySecond == this)
+				{
+					// The first hand to grab will control the object for both hands
+					grabbed.GrabbedBy.SetSecondGrab(anchor, _joint.Target);
+				}
+				else
+				{
+					// Control the object to follow the hand
+					SetGrab(_grabbed.Body, anchor);
+				}
 				_solidHandMatcher.SecondTarget = anchor;
 				_handColliders.SetActive(false);
-				_handSolid.SetBool(_grabbed.GrabPoseID, true);
+				if (_grabbed.GrabPoseID != 0)
+				{
+					_handSolid.SetBool(_grabbed.GrabPoseID, true);
+				}
 			}
 		}
 
+		void SetGrab(Rigidbody grabbedBody, Transform anchor)
+		{
+			_joint.GrabbedBody = grabbedBody;
+			_joint.GrabbedAnchor = anchor;
+		}
+
+		void SetSecondGrab(Transform anchor, Transform target)
+		{
+			_joint.SecondAnchor = anchor;
+			_joint.SecondTarget = target;
+		}
 
 		void EndGrab()
 		{
+			//TODO  Add event: OnEndGrab
 			//Debug.Log($"You just released {_grabbed?.name}");
 			_handSolid.SetBool(_grabbed.GrabPoseID, false);
+			if (_grabbed.GrabbedBySecond == this)
+			{
+				// This is the second hand being released.  Clear second grab from the first's joint
+				_grabbed.GrabbedBy.SetSecondGrab(null, null);
+			} else if (_grabbed.GrabbedBySecond != null)
+			{
+				// This is the first hand being released.  The second must now use its own joint to grab
+				_grabbed.GrabbedBySecond.SetGrab(_grabbed.Body, _joint.SecondAnchor);
+			}
 			_grabbed.Release(this);
 			_grabbed = null;
-			_joint.GrabbedBody = null;
+			SetGrab(null, null);
+			SetSecondGrab(null, null);
 			_solidHandMatcher.SecondTarget = _solidHandMatcher.transform;
 		}
 

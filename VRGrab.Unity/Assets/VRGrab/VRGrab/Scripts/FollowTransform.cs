@@ -34,7 +34,7 @@ namespace Barliesque.VRGrab
 			// While the application is not playing...
 			if (!Application.isPlaying)
 			{
-				// Make sure we have a non-kinematic Rigidbody
+				// Make sure we have a Rigidbody
 				if (_body == null)
 				{
 					_body = GetComponent<Rigidbody>();
@@ -43,6 +43,8 @@ namespace Barliesque.VRGrab
 						_body = gameObject.AddComponent<Rigidbody>();
 					}
 				}
+
+				// Make sure it's non-kinematic
 				_body.isKinematic = false;
 				_body.useGravity = false;
 
@@ -63,6 +65,11 @@ namespace Barliesque.VRGrab
 			// Match the target position/rotation immediately
 			transform.position = Target.position;
 			transform.rotation = Target.rotation;
+			if (_body != null)
+			{
+				_body.velocity = Vector3.zero;
+				_body.angularVelocity = Vector3.zero;
+			}
 		}
 
 

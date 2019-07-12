@@ -9,6 +9,7 @@ namespace Barliesque.VRGrab
 	public class GrabAnchor : MonoBehaviour
 	{
 		//TODO  Consider adding a public flag that indicates if this anchor is being grabbed
+		//TODO  Add a max radius property
 
 		public enum Hand
 		{
