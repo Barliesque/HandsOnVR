@@ -21,8 +21,8 @@ Material:
     m_TexEnvs: []
     m_Floats:
     - _Emissive: 0
-    - _GlowAmount: 0.8
-    - _Opacity: 0.4
+    - _GlowAmount: 0.85
+    - _Opacity: 0.8
     - _RimEffect: 0.527
     - __dirty: 0
     m_Colors:
