@@ -210,13 +210,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f36108b8bf3daf4aa3f0e846148b82f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GrabbedBody: {fileID: 0}
-  GrabbedAnchor: {fileID: 0}
-  Target: {fileID: 0}
-  SecondAnchor: {fileID: 0}
-  SecondTarget: {fileID: 0}
+  _grabbedBody: {fileID: 0}
+  _grabbedAnchor: {fileID: 0}
+  _target: {fileID: 0}
+  _secondAnchor: {fileID: 0}
+  _secondTarget: {fileID: 0}
   _handBody: {fileID: 3975283621250364015}
-  Influence: 1
+  _engageTime: 0.2
 --- !u!136 &3874723897149308482
 CapsuleCollider:
   m_ObjectHideFlags: 0

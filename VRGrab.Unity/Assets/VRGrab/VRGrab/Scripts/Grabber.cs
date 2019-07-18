@@ -156,14 +156,12 @@ namespace Barliesque.VRGrab
 
 		void SetGrab(Rigidbody grabbedBody, Transform anchor)
 		{
-			_joint.GrabbedBody = grabbedBody;
-			_joint.GrabbedAnchor = anchor;
+			_joint.SetGrab(grabbedBody, anchor);
 		}
 
 		void SetSecondGrab(Transform anchor, Transform target)
 		{
-			_joint.SecondAnchor = anchor;
-			_joint.SecondTarget = target;
+			_joint.SetSecondGrab(anchor, target);
 		}
 
 		void EndGrab()
