@@ -62,13 +62,16 @@ namespace Barliesque.VRGrab
 
 		private void OnEnable()
 		{
-			// Match the target position/rotation immediately
-			transform.position = Target.position;
-			transform.rotation = Target.rotation;
-			if (_body != null)
+			if (Target != null)
 			{
-				_body.velocity = Vector3.zero;
-				_body.angularVelocity = Vector3.zero;
+				// Match the target position/rotation immediately
+				transform.position = Target.position;
+				transform.rotation = Target.rotation;
+				if (_body != null)
+				{
+					_body.velocity = Vector3.zero;
+					_body.angularVelocity = Vector3.zero;
+				}
 			}
 		}
 

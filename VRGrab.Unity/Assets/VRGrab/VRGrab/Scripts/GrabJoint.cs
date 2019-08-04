@@ -24,7 +24,7 @@ namespace Barliesque.VRGrab
 		public Transform SecondTarget { get { return _secondTarget; } }
 
 		[SerializeField] Rigidbody _handBody;
-		[SerializeField] float _engageTime = 0.25f;
+		[SerializeField] float _engageTime = 0.15f;
 
 		float _engaged = 1f;
 

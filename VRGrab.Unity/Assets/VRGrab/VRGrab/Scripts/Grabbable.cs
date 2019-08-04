@@ -149,6 +149,7 @@ namespace Barliesque.VRGrab
 					{
 						// No valid GrabAnchor available.
 						anchor = null;
+						Debug.Log($"{name}: No GrabAnchor available");
 
 						if (GrabbedBySecond)
 						{
@@ -164,6 +165,7 @@ namespace Barliesque.VRGrab
 			}
 			else
 			{
+				Debug.Log($"{name}: Grab not allowed by callback");
 				anchor = null;
 				_currentAnchor = -1;
 			}
@@ -178,7 +180,7 @@ namespace Barliesque.VRGrab
 			int closest = -1;
 			float bestScore = float.MinValue;
 
-			var grabbedByHand = grabbedBy.Hand.Hand;
+			var grabbedByHand = grabbedBy.Controller.Hand;
 			var grabberPos = grabbedBy.transform.position;
 			var grabberRot = grabbedBy.transform.rotation;
 
