@@ -1,5 +1,5 @@
 # VRGrab
-A Unity/C# library exploring grab mechanics, using Oculus Touch controllers.
+A Unity/C# library exploring grab mechanics, using Oculus Touch controllers.  Cross-platform support is planned.
 
 
 ### PROJECT OBJECTIVES
