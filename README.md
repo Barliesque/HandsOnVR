@@ -9,4 +9,4 @@ A common approach to enabling a VR user to manipulate virtual objects is to simp
 
 In HandsOnVR, the hands are represented in two forms:  A solid hand and a ghosted hand, the latter of which would be mostly unseen.  The solid hands, always want to follow the Touch controllers, but since they have colliders they can't pass through solid objects that won't always be possible.  When an object is grabbed, the solid hand attaches itself to the object and together they are pulled towards the controller.  The ghosted hands have no collision and always match the Touch controllers' position and rotation perfectly.  When the solid and ghost hands become separated -- e.g. if the user tries to lift a heavy object or stick their hands through a wall -- the ghost hands fade into visibility.
 
-View the roadmap/to-do-list on [Trello]: https://trello.com/b/q7liQXGQ/handsonvr
+View the roadmap/to-do-list on [Trello](https://trello.com/b/q7liQXGQ/handsonvr)
