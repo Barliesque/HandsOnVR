@@ -2,7 +2,7 @@
 using Barliesque.InspectorTools.Editor;
 
 
-namespace Barliesque.VRGrab.Editor
+namespace HandsOnVR.Editor
 {
 
 	[CustomEditor(typeof(GrabAnchor))]

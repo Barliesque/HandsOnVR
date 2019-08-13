@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 
-namespace Barliesque.VRGrab
+namespace HandsOnVR
 {
 	/// <summary>
 	/// Make a Rigidbody follow a transform, in a non-kinematic manner.

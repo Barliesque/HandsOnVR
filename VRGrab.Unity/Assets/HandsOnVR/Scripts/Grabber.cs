@@ -2,7 +2,7 @@
 using UnityEngine;
 
 
-namespace Barliesque.VRGrab
+namespace HandsOnVR
 {
 
 	/// <summary>
@@ -209,6 +209,7 @@ namespace Barliesque.VRGrab
 					if (_grabbed.GrabPoseID != 0)
 					{
 						_handSolid.SetBool(_grabbed.GrabPoseID, true);
+						_handGhost.SetBool(_grabbed.GrabPoseID, true);
 					}
 
 					// Grab was successful, so we are done
@@ -232,6 +233,7 @@ namespace Barliesque.VRGrab
 		void EndGrab()
 		{
 			_handSolid.SetBool(_grabbed.GrabPoseID, false);
+			_handGhost.SetBool(_grabbed.GrabPoseID, false);
 			if (_grabbed.GrabbedBySecond == this)
 			{
 				// This is the second hand being released.  Clear second grab from the first's joint
@@ -273,7 +275,7 @@ namespace Barliesque.VRGrab
 				var collider = item.Key;
 
 				// Evaluate distance by raycasting from here to the collider.
-				var direction = collider.bounds.center - here;  //TODO  Try using collider.bounds.center
+				var direction = collider.bounds.center - here;
 				var maxDist = direction.magnitude;
 				direction /= maxDist;
 

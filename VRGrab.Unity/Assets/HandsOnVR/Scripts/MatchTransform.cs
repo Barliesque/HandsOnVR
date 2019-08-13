@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 
-namespace Barliesque.VRGrab
+namespace HandsOnVR
 {
 	/// <summary>
 	/// Copies the world position and/or orientation from another transform to the local transform.  A second target transform may be set and transitioned to from the first.

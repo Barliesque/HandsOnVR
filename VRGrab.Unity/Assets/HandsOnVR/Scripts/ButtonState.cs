@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace Barliesque.VRGrab
+namespace HandsOnVR
 {
 	[Serializable]  // Open an Inspector panel in debug mode to monitor the state values in HandController
 	public class ButtonState

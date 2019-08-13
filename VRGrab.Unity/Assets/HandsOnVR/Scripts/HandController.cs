@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 
-namespace Barliesque.VRGrab
+namespace HandsOnVR
 {
 
 	public enum Hand { Left, Right }

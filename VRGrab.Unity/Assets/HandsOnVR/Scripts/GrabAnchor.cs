@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 
-namespace Barliesque.VRGrab
+namespace HandsOnVR
 {
 	/// <summary>
 	/// A component to refine grabbing of objects.  Multiple anchors can be used to specify a variety of anchor points and orientations.

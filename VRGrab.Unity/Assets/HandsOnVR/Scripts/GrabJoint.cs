@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 
-namespace Barliesque.VRGrab
+namespace HandsOnVR
 {
 	/// <summary>
 	/// Bring a grabbed object to the hand, by applying force to its Rigidbody
