@@ -44,28 +44,47 @@ namespace HandsOnVR
 			/// <summary>The shortest distance to a collider belonging to the Grabbable</summary>
 			public float distance;
 
-			public int IncrementColliders() { return ++colliders; }
-			public int DecrementColliders() { return --colliders; }
-			public void ResetDistance() { distance = float.MaxValue; }
-			public void TryDistance(float value) {
+			public GrabbableStats IncrementColliders()
+			{
+				++colliders;
+				return this;
+			}
+
+			public GrabbableStats DecrementColliders()
+			{
+				--colliders;
+				return this;
+			}
+
+			public GrabbableStats ResetDistance()
+			{
+				distance = float.MaxValue;
+				return this;
+			}
+
+			public GrabbableStats TryDistance(float value)
+			{
 				if (value < distance) distance = value;
+				return this;
 			}
 		}
 
 
 		Grabbable _grabbed;
-		RaycastHit[] _hits = new RaycastHit[3];
+		RaycastHit[] _hits = new RaycastHit[64];
 		GrabJoint _joint;
 		CapsuleCollider _triggerVolume;
 
 
 		public Transform GrabbedAnchor { get { return _joint.GrabbedAnchor; } }
 
+		public float MaxRadius { get; private set; }
 
 		private void Awake()
 		{
 			_joint = GetComponent<GrabJoint>();
 			_triggerVolume = GetComponent<CapsuleCollider>();
+			MaxRadius = _triggerVolume.bounds.size.magnitude;
 		}
 
 
@@ -87,7 +106,7 @@ namespace HandsOnVR
 						var item = _canGrab[i];
 						if (item.grabbable == grabbable)
 						{
-							item.IncrementColliders();
+							_canGrab[i] = item.IncrementColliders();
 							found = true;
 							break;
 						}
@@ -124,7 +143,8 @@ namespace HandsOnVR
 						var item = _canGrab[i];
 						if (item.grabbable == grabbable)
 						{
-							if (item.DecrementColliders() == 0)
+							_canGrab[i] = item.DecrementColliders();
+							if ( item.colliders == 0)
 							{
 								_canGrab.RemoveAt(i);
 								OnGrabbableExit?.Invoke(grabbable);
@@ -187,7 +207,10 @@ namespace HandsOnVR
 
 			for (int i = 0, len = _canGrab.Count; i < len; i++)
 			{
-				Grabbable grabbed = _canGrab[i].grabbable;
+				var item = _canGrab[i];
+				if (item.distance > MaxRadius) return;
+
+				Grabbable grabbed = item.grabbable;
 
 				Transform anchor;
 				if (grabbed.TryGrab(this, out anchor))
@@ -217,6 +240,7 @@ namespace HandsOnVR
 					return;
 				}
 				// Grab was unsuccessful, so try the next closest
+				//Debug.Log($"COULD NOT GRAB {grabbed.name}  ...next!");
 			}
 		}
 
@@ -265,7 +289,7 @@ namespace HandsOnVR
 			// Reset distances of Grabbables for testing
 			for (int i = 0, len = _canGrab.Count; i < len; i++)
 			{
-				_canGrab[i].ResetDistance();
+				_canGrab[i] = _canGrab[i].ResetDistance();
 			}
 
 			// Run through list of colliders to find the shortest distance to each Grabbable
@@ -296,8 +320,8 @@ namespace HandsOnVR
 				{
 					// Is it closer than any other tested for the given Grabbable?
 					var grabbable = item.Value;
-					var stats = _canGrab.Find((a) => a.grabbable == grabbable);
-					stats.TryDistance(hit.distance);
+					var i = _canGrab.FindIndex((a) => a.grabbable == grabbable);
+					_canGrab[i] = _canGrab[i].TryDistance(hit.distance);
 				}
 			}
 
