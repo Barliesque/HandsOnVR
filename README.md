@@ -1,5 +1,5 @@
 # HandsOnVR
-(Renamed from VRGrab)  A Unity/C# library exploring mass-based grab mechanics, using Oculus Touch controllers.  Cross-platform support is planned.
+(Renamed from VRGrab)  A Unity/C# library exploring mass-based grab mechanics, using Oculus Touch controllers.  Cross-platform support is planned.  Watch this [short demo.](https://youtu.be/BJLDVVXyPz0)
 
 ### PROJECT OBJECTIVES
 My goal with this project is to create a system that allows users to interact with virtual objects in as natural and believable a manner as possible.  When picking up an object, the virtual hands should automatically orient correctly and form a natural grip on the object.  Neither the user's hands nor objects held in them should be able to pass through other objects or walls.  Heavyweight objects should be more difficult to move than lightweight objects.
