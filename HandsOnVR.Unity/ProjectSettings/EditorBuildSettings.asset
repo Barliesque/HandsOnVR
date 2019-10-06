@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Demo/HandsOnVR Demo.unity
+    guid: 040dc1c06b03c4d4a8c3ef8bdd158c84
   m_configObjects: {}
