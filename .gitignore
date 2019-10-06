@@ -34,3 +34,8 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+HandsOnVR.Unity/.idea
+HandsOnVR.Unity/Assets/Plugins/Editor/JetBrains/JetBrains.Rider.Unity.Editor.Plugin.Repacked.dll.meta
+HandsOnVR.Unity/Assets/Plugins/Editor/JetBrains.meta
+HandsOnVR.Unity/Assets/Plugins
+HandsOnVR.Unity/Assets/Plugins.meta
