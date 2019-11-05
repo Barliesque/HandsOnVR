@@ -9,19 +9,19 @@ namespace HandsOnVR
 	public class GrabJoint : MonoBehaviour
 	{
 		[SerializeField] Rigidbody _grabbedBody;
-		public Rigidbody GrabbedBody { get { return _grabbedBody; } }
+		public Rigidbody GrabbedBody => _grabbedBody;
 
 		[SerializeField] Transform _grabbedAnchor;
-		public Transform GrabbedAnchor { get { return _grabbedAnchor; } }
+		public Transform GrabbedAnchor => _grabbedAnchor;
 
 		[SerializeField] Transform _target;
-		public Transform Target { get { return _target; } }
+		public Transform Target => _target;
 
 		[SerializeField] Transform _secondAnchor;
-		public Transform SecondAnchor { get { return _secondAnchor; } }
+		public Transform SecondAnchor => _secondAnchor;
 
 		[SerializeField] Transform _secondTarget;
-		public Transform SecondTarget { get { return _secondTarget; } }
+		public Transform SecondTarget => _secondTarget;
 
 		[SerializeField] Rigidbody _handBody;
 		[SerializeField] float _engageTime = 0.15f;
@@ -58,7 +58,7 @@ namespace HandsOnVR
 
 		void FixedUpdate()
 		{
-			if (_grabbedBody != null && _handBody != null)
+			if (_grabbedBody && _handBody)
 			{
 				bool isTwoHanded = _secondTarget && _secondAnchor;
 
@@ -76,21 +76,22 @@ namespace HandsOnVR
 				if (isTwoHanded)
 				{
 					// Two hands are manipulating this object...
+					var secondAnchorPos = _secondAnchor.position;
 
 					// Blend the position deltas of the each hand compared to its anchor
-					var delta2 = (_secondTarget.position - _secondAnchor.position) * (_moveSpeed / (1f + _grabbedBody.mass));
+					var delta2 = (_secondTarget.position - secondAnchorPos) * (_moveSpeed / (1f + _grabbedBody.mass));
 					delta = Vector3.LerpUnclamped(delta, delta2, 0.5f * _engaged);
 
 					// TODO  Calculate stretch, twist and bend
 					// TODO  Add option to auto-release second hand if stretch goes beyond a tolerance.  Priority could be specified by GrabAnchors
 
 					// Find the angle between the anchors
-					var fromDir = (_grabbedAnchor.position - _secondAnchor.position).normalized;
+					var fromDir = (_grabbedAnchor.position - secondAnchorPos).normalized;
 					var fromUp = _grabbedAnchor.up;
 					var from = Quaternion.LookRotation(fromDir, fromUp);
 
 					// Find the angle between the hands
-					var toDir = (_target.position - _secondTarget.position).normalized;
+					var toDir = (_target.position - secondAnchorPos).normalized;
 					var toUp = Vector3.Lerp(_target.up, _secondTarget.up, 0.5f).normalized;
 					var to = Quaternion.LookRotation(toDir, toUp);
 
@@ -113,19 +114,16 @@ namespace HandsOnVR
 				_grabbedBody.AddForce(Vector3.LerpUnclamped(_grabbedBody.velocity, delta + handVelocity, _engaged) - _grabbedBody.velocity, ForceMode.VelocityChange);
 
 				// Convert angular delta from Quaternion to Angle/Axis
-				float angle;
-				Vector3 axis;
-				angDelta.ToAngleAxis(out angle, out axis);
+				angDelta.ToAngleAxis(out float angle, out Vector3 axis);
 
 				// Check that we're not already aligned
-				if (!float.IsInfinity(axis.x))
-				{
-					// Apply angular velocity to align the object to the hand(s)
-					if (angle > 180f) angle -= 360f;
-					var magnitude = (_turnSpeed * Mathf.Deg2Rad * angle / Time.fixedUnscaledDeltaTime);
-					var newAngVel = magnitude * axis.normalized;
-					_grabbedBody.angularVelocity = Vector3.LerpUnclamped(_grabbedBody.angularVelocity, newAngVel, _engaged);
-				}
+				if (float.IsInfinity(axis.x)) return;
+				
+				// Apply angular velocity to align the object to the hand(s)
+				if (angle > 180f) angle -= 360f;
+				var magnitude = (_turnSpeed * Mathf.Deg2Rad * angle / Time.fixedUnscaledDeltaTime);
+				var newAngVel = magnitude * axis.normalized;
+				_grabbedBody.angularVelocity = Vector3.LerpUnclamped(_grabbedBody.angularVelocity, newAngVel, _engaged);
 			}
 		}
 
