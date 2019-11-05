@@ -41,6 +41,8 @@ namespace HandsOnVR
 
 		void FixedUpdate()
 		{
+			//TODO  Currently moving forward does not happen in conjunction with the Physics simulation.  As such, the solid hands can become embedded in objects they move into.
+
 			var forwardR = OVRInput.Get(OVRInput.RawButton.RThumbstickUp);
 			var forwardL = OVRInput.Get(OVRInput.RawButton.LThumbstickUp);
 			var backwardR = OVRInput.Get(OVRInput.RawButton.RThumbstickDown);
