@@ -17,7 +17,7 @@ namespace HandsOnVR
 		[SerializeField] Transform _focusPoint;
 		[SerializeField] Animator _handSolid;
 		[SerializeField] Animator _handGhost;
-		[SerializeField] MatchTransform _solidHandMatcher;
+		[SerializeField] SolidHandMover _solidHandMover;
 		[SerializeField] GameObject _handColliders;
 		[SerializeField] Grabber _otherHand;
 		[SerializeField] LayerMask _grabbableLayers = 0x7FFFFFFF;
@@ -34,6 +34,12 @@ namespace HandsOnVR
 
 		/// <summary>Grabbables currently within the trigger volume</summary>
 		List<GrabbableStats> _canGrab = new List<GrabbableStats>();
+
+		Grabbable _grabbed;
+		RaycastHit[] _hits = new RaycastHit[64];
+		GrabJoint _joint;
+		CapsuleCollider _triggerVolume;
+
 
 		struct GrabbableStats
 		{
@@ -70,13 +76,7 @@ namespace HandsOnVR
 		}
 
 
-		Grabbable _grabbed;
-		RaycastHit[] _hits = new RaycastHit[64];
-		GrabJoint _joint;
-		CapsuleCollider _triggerVolume;
-
-
-		public Transform GrabbedAnchor { get { return _joint.GrabbedAnchor; } }
+		public IGrabAnchor GrabbedAnchor { get { return _joint.GrabbedAnchor; } }
 
 		public float MaxRadius { get; private set; }
 
@@ -144,7 +144,7 @@ namespace HandsOnVR
 						if (item.grabbable == grabbable)
 						{
 							_canGrab[i] = item.DecrementColliders();
-							if ( item.colliders == 0)
+							if (item.colliders == 0)
 							{
 								_canGrab.RemoveAt(i);
 								OnGrabbableExit?.Invoke(grabbable);
@@ -180,19 +180,19 @@ namespace HandsOnVR
 				}
 			}
 
-			if (_grabbed != null && _solidHandMatcher.Transition < 1f)
+			if (_grabbed != null && _solidHandMover.Transition < 1f)
 			{
 				// Move the solid hand to the grabbed object
-				_solidHandMatcher.Transition = Mathf.Clamp01(_solidHandMatcher.Transition + Time.unscaledDeltaTime * 2f);
+				_solidHandMover.Transition = Mathf.Clamp01(_solidHandMover.Transition + Time.unscaledDeltaTime * 2f);
 			}
 
-			if (_grabbed == null && _solidHandMatcher.Transition > 0f)
+			if (_grabbed == null && _solidHandMover.Transition > 0f)
 			{
 				// Move the solid hand back to HandController
-				_solidHandMatcher.Transition = Mathf.Clamp01(_solidHandMatcher.Transition - Time.unscaledDeltaTime * 2f);
-				if (_solidHandMatcher.Transition == 0f)
+				_solidHandMover.Transition = Mathf.Clamp01(_solidHandMover.Transition - Time.unscaledDeltaTime * 2f);
+				if (_solidHandMover.Transition == 0f)
 				{
-					_solidHandMatcher.SecondTarget = null;
+					_solidHandMover.Anchor = null;
 				}
 			}
 		}
@@ -212,7 +212,7 @@ namespace HandsOnVR
 
 				Grabbable grabbed = item.grabbable;
 
-				Transform anchor;
+				IGrabAnchor anchor;
 				if (grabbed.TryGrab(this, out anchor))
 				{
 					_grabbed = grabbed;
@@ -227,7 +227,7 @@ namespace HandsOnVR
 						// Control the object to follow the hand
 						SetGrab(_grabbed.Body, anchor);
 					}
-					_solidHandMatcher.SecondTarget = anchor;
+					_solidHandMover.Anchor = anchor;
 					_handColliders.SetActive(false);
 					if (_grabbed.GrabPoseID != 0)
 					{
@@ -244,12 +244,12 @@ namespace HandsOnVR
 			}
 		}
 
-		void SetGrab(Rigidbody grabbedBody, Transform anchor)
+		void SetGrab(Rigidbody grabbedBody, IGrabAnchor anchor)
 		{
-			_joint.SetGrab(grabbedBody, anchor);
+			_joint.SetGrab(grabbedBody, anchor, _controller.Hand);
 		}
 
-		void SetSecondGrab(Transform anchor, Transform target)
+		void SetSecondGrab(IGrabAnchor anchor, Transform target)
 		{
 			_joint.SetSecondGrab(anchor, target);
 		}
@@ -273,7 +273,7 @@ namespace HandsOnVR
 			_grabbed = null;
 			SetGrab(null, null);
 			SetSecondGrab(null, null);
-			_solidHandMatcher.SecondTarget = _solidHandMatcher.transform;
+			_solidHandMover.Anchor = null;
 			OnGrabEnd?.Invoke(grabbed);
 		}
 

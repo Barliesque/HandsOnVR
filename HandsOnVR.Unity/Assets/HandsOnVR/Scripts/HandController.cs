@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 
 namespace HandsOnVR
 {
 
-	public enum Hand { Left, Right }
+	public enum Hand { Left = 1, Right = 2 }
 
 
 	/// <summary>
@@ -24,14 +25,27 @@ namespace HandsOnVR
 		public ButtonState ThumbRest { get; private set; } = new ButtonState();
 
 
+		Transform _xform;
+		Transform Xform
+		{
+			get {
+				if (_xform == null) _xform = GetComponent<Transform>();
+				return _xform;
+			}
+		}
+
+		public Vector3 Position => Xform.position;
+		public Quaternion Rotation => Xform.rotation;
+
+
 		private void Update()
 		{
 			var controller = _hand == Hand.Left ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch;
 			if (OVRInput.IsControllerConnected(controller))
 			{
 				// Match this transform to the controller's position & rotation
-				transform.localPosition = OVRInput.GetLocalControllerPosition(controller);
-				transform.localRotation = OVRInput.GetLocalControllerRotation(controller);
+				Xform.localPosition = OVRInput.GetLocalControllerPosition(controller);
+				_xform.localRotation = OVRInput.GetLocalControllerRotation(controller);
 
 				// Update the states of the Grip and Trigger analog buttons
 				Grip.Update(OVRInput.Get(_hand == Hand.Left ? OVRInput.RawAxis1D.LHandTrigger : OVRInput.RawAxis1D.RHandTrigger, controller));

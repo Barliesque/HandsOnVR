@@ -11,14 +11,14 @@ namespace HandsOnVR
 		[SerializeField] Rigidbody _grabbedBody;
 		public Rigidbody GrabbedBody => _grabbedBody;
 
-		[SerializeField] Transform _grabbedAnchor;
-		public Transform GrabbedAnchor => _grabbedAnchor;
+		[SerializeField] IGrabAnchor _grabbedAnchor;
+		public IGrabAnchor GrabbedAnchor => _grabbedAnchor;
 
 		[SerializeField] Transform _target;
 		public Transform Target => _target;
 
-		[SerializeField] Transform _secondAnchor;
-		public Transform SecondAnchor => _secondAnchor;
+		[SerializeField] IGrabAnchor _secondAnchor;
+		public IGrabAnchor SecondAnchor => _secondAnchor;
 
 		[SerializeField] Transform _secondTarget;
 		public Transform SecondTarget => _secondTarget;
@@ -27,6 +27,8 @@ namespace HandsOnVR
 		[SerializeField] float _engageTime = 0.15f;
 
 		float _engaged = 1f;
+
+		Hand _firstGrabbedBy;
 
 		const float _moveSpeed = 60f;
 		const float _turnSpeed = 0.9f;
@@ -40,14 +42,15 @@ namespace HandsOnVR
 			}
 		}
 
-		public void SetGrab(Rigidbody grabbedBody, Transform anchor)
+		public void SetGrab(Rigidbody grabbedBody, IGrabAnchor anchor, Hand grabbedBy)
 		{
 			_grabbedBody = grabbedBody;
 			_grabbedAnchor = anchor;
+			_firstGrabbedBy = grabbedBy;
 			_engaged = (_engageTime > 0) ? 0f : 1f;
 		}
 
-		public void SetSecondGrab(Transform anchor, Transform target)
+		public void SetSecondGrab(IGrabAnchor anchor, Transform target)
 		{
 			_secondAnchor = anchor;
 			_secondTarget = target;
@@ -60,11 +63,11 @@ namespace HandsOnVR
 		{
 			if (_grabbedBody && _handBody)
 			{
-				bool isTwoHanded = _secondTarget && _secondAnchor;
+				bool isTwoHanded = _secondTarget && (_secondAnchor != null);
 
 				// How far is the grabbed anchor from the hand?
 				var mass = _grabbedBody.mass * (isTwoHanded ? 0.5f : 1f);
-				var delta = (_target.position - _grabbedAnchor.position) * (_moveSpeed / (1f + mass));
+				var delta = (_target.position - _grabbedAnchor.GetPosition(_firstGrabbedBy)) * (_moveSpeed / (1f + mass));
 
 				// Find the angular delta
 				Quaternion angDelta;
@@ -76,7 +79,8 @@ namespace HandsOnVR
 				if (isTwoHanded)
 				{
 					// Two hands are manipulating this object...
-					var secondAnchorPos = _secondAnchor.position;
+					var secondHand = _firstGrabbedBy == Hand.Left ? Hand.Right : Hand.Left;
+					var secondAnchorPos = _secondAnchor.GetPosition(secondHand);
 
 					// Blend the position deltas of the each hand compared to its anchor
 					var delta2 = (_secondTarget.position - secondAnchorPos) * (_moveSpeed / (1f + _grabbedBody.mass));
@@ -86,8 +90,8 @@ namespace HandsOnVR
 					// TODO  Add option to auto-release second hand if stretch goes beyond a tolerance.  Priority could be specified by GrabAnchors
 
 					// Find the angle between the anchors
-					var fromDir = (_grabbedAnchor.position - secondAnchorPos).normalized;
-					var fromUp = _grabbedAnchor.up;
+					var fromDir = (_grabbedAnchor.GetPosition(_firstGrabbedBy) - secondAnchorPos).normalized;
+					var fromUp = _secondAnchor.GetUp(secondHand);
 					var from = Quaternion.LookRotation(fromDir, fromUp);
 
 					// Find the angle between the hands
@@ -100,7 +104,7 @@ namespace HandsOnVR
 				}
 				else
 				{
-					angDelta = _target.rotation * Quaternion.Inverse(_grabbedAnchor.rotation);
+					angDelta = _target.rotation * Quaternion.Inverse(_grabbedAnchor.GetRotation(_firstGrabbedBy));
 				}
 
 
@@ -118,7 +122,7 @@ namespace HandsOnVR
 
 				// Check that we're not already aligned
 				if (float.IsInfinity(axis.x)) return;
-				
+
 				// Apply angular velocity to align the object to the hand(s)
 				if (angle > 180f) angle -= 360f;
 				var magnitude = (_turnSpeed * Mathf.Deg2Rad * angle / Time.fixedUnscaledDeltaTime);

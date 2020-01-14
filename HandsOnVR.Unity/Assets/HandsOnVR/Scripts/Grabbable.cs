@@ -11,11 +11,13 @@ namespace HandsOnVR
 	/// Make an object available to be picked up with the player's hands.  (See: Grabber.cs)
 	/// </summary>
 	[RequireComponent(typeof(Rigidbody))]
-	public class Grabbable : MonoBehaviour
+	public class Grabbable : MonoBehaviour, IGrabAnchor
 	{
 
 		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While this object is being grabbed, the specified parameter will be set to true.")]
 		[SerializeField] string _grabPose;
+		public string GrabPose => _grabPose;
+
 		int _grabPoseID;
 		public int GrabPoseID
 		{
@@ -77,12 +79,22 @@ namespace HandsOnVR
 
 		public Rigidbody Body { get; private set; }
 
-		GrabAnchor[] _grabAnchors;
+		Transform _xform;
+		IGrabAnchor[] _grabAnchors;
+		//Grabber[] _grabbedBy;
 		int _currentAnchor = -1;
 
 		// Maximum distance the hand may be from a hand anchor for that anchor to be grabbable
-		public float MaxAnchorDistance { get; } = 0.25f;
+		public float MaxAnchorDistance => 0.25f;
 		//TODO  This distance should be considered before Grabber determines which object is really the nearest... maybe
+
+
+		public bool SupportsHand(Hand hand) => true;
+		public bool MirrorForOtherHand => false;
+		public GrabAnchor.Order GrabOrder => GrabAnchor.Order.FirstOrSecond;
+		public bool OverridePose => false;
+		public bool OverrideOrientToHand => false;
+
 
 
 		virtual protected void Start()
@@ -90,6 +102,8 @@ namespace HandsOnVR
 			GrabPoseID = Animator.StringToHash(_grabPose);
 			Body = GetComponent<Rigidbody>();
 			_grabAnchors = GetComponentsInChildren<GrabAnchor>();
+			//_grabbedBy = new Grabber[_grabAnchors.Length];
+			_xform = GetComponent<Transform>();
 		}
 
 
@@ -98,7 +112,7 @@ namespace HandsOnVR
 		/// </summary>
 		/// <param name="grabbedBy">The Grabber attempting to grab this object</param>
 		/// <returns>True is returned if grab is allowed, or false if it is not.</returns>
-		internal virtual bool TryGrab(Grabber grabbedBy, out Transform anchor)
+		internal virtual bool TryGrab(Grabber grabbedBy, out IGrabAnchor anchor)
 		{
 			if (GrabbedBy != null)
 			{
@@ -119,7 +133,7 @@ namespace HandsOnVR
 			bool allowed = OnGrabbed?.Invoke(this, grabbedBy) ?? true;
 			if (allowed)
 			{
-				Transform anchorAlreadyGrabbed = null;
+				IGrabAnchor anchorAlreadyGrabbed = null;
 
 				// Is this the first hand grabbing this object?
 				if (GrabbedBy == null)
@@ -135,7 +149,7 @@ namespace HandsOnVR
 				// By what anchor will it be grabbed?
 				if (_grabAnchors.Length == 0)
 				{
-					anchor = this.transform;
+					anchor = this;
 					_currentAnchor = -1;
 				}
 				else
@@ -143,7 +157,7 @@ namespace HandsOnVR
 					_currentAnchor = FindClosestAnchor(grabbedBy, anchorAlreadyGrabbed);
 					if (_currentAnchor >= 0)
 					{
-						anchor = _grabAnchors[_currentAnchor].transform;
+						anchor = _grabAnchors[_currentAnchor];
 					}
 					else
 					{
@@ -174,7 +188,7 @@ namespace HandsOnVR
 
 
 
-		private int FindClosestAnchor(Grabber grabbedBy, Transform alreadyGrabbed)
+		private int FindClosestAnchor(Grabber grabbedBy, IGrabAnchor alreadyGrabbed)
 		{
 			//  Find which anchor is closest to the Grabber
 			int closest = -1;
@@ -191,15 +205,14 @@ namespace HandsOnVR
 				var anchor = _grabAnchors[i];
 
 				// Make sure the anchor is available to this Grabber
+				if (!anchor.enabled) continue;
 				if (anchor == alreadyGrabbed) continue;
 				if (anchor.GrabOrder == GrabAnchor.Order.FirstOnly && isSecond) continue;
 				if (anchor.GrabOrder == GrabAnchor.Order.SecondOnly && !isSecond) continue;
-				if (anchor.AllowHand == GrabAnchor.Hand.None || !anchor.enabled) continue;
-				if (anchor.AllowHand == GrabAnchor.Hand.Left && grabbedByHand == Hand.Right) continue;
-				if (anchor.AllowHand == GrabAnchor.Hand.Right && grabbedByHand == Hand.Left) continue;
+				if (!anchor.SupportsHand(grabbedByHand)) continue;
 
 				// Calculate a score for the anchor, based on distance and orientation deltas
-				float distScore = 1f - Mathf.Clamp01((anchor.transform.position - grabberPos).magnitude / MaxAnchorDistance);
+				float distScore = 1f - Mathf.Clamp01((anchor.GetPosition(grabbedByHand) - grabberPos).magnitude / MaxAnchorDistance);
 				float oriScore;
 				if (!OrientToHand)
 				{
@@ -207,7 +220,7 @@ namespace HandsOnVR
 				}
 				else
 				{
-					oriScore = OrientationScore(anchor.transform.rotation, grabberRot);
+					oriScore = OrientationScore(anchor.GetRotation(grabbedByHand), grabberRot);
 				}
 
 				float score = distScore * oriScore;
@@ -263,5 +276,19 @@ namespace HandsOnVR
 			}
 		}
 
+		public Vector3 GetPosition(Hand hand) //TODO  Consider passing the hand controller instead.  Then the grabbable could return the hand's point of contact as the position.
+		{
+			return _xform.position;
+		}
+
+		public Quaternion GetRotation(Hand hand)
+		{
+			return _xform.rotation;
+		}
+
+		public Vector3 GetUp(Hand hand)
+		{
+			return _xform.up;
+		}
 	}
 }
