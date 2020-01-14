@@ -1513,8 +1513,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4362139151950129641}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.08840001, y: 0.0055000186, z: -0.0020999908}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0.000000018562726, w: 0.7071068}
+  m_LocalPosition: {x: -0.076700024, y: -0.025899999, z: 0.016800009}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4348950908461166140}
@@ -1532,12 +1532,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85e55d39456001418ddb2849e9b91ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _allowHand: 3
+  _primaryHand: 1
+  _mirrorForOtherHand: 1
+  _mirrorActions: 4
   _grabOrder: 0
   _overridePose: 0
   _grabPose: 
   _overrideOrientToHand: 0
   _orientToHand: 1
+  _liveUpdate: 0
 --- !u!1 &4476556220920335294
 GameObject:
   m_ObjectHideFlags: 0
