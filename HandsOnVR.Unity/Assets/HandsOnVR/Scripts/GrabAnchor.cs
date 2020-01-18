@@ -1,7 +1,7 @@
 ﻿using Barliesque.InspectorTools;
 using System;
 using UnityEngine;
-
+using UnityEngine.Serialization;
 
 namespace HandsOnVR
 {
@@ -54,12 +54,21 @@ namespace HandsOnVR
 		public Order GrabOrder { get { return _grabOrder; } }
 
 		[Tooltip("Should this GrabAnchor use a different Grab Pose than specified by the Grabbable component?")]
-		[SerializeField] bool _overridePose;
-		public bool OverridePose { get { return _overridePose; } }
+		[SerializeField, FormerlySerializedAs("_overridePose")] bool _overrideGrabPose;
+		public bool OverrideGrabPose { get { return _overrideGrabPose; } }
 
 		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While this object is being grabbed, the specified parameter will be set to true.")]
 		[SerializeField] protected string _grabPose;
 		public int GrabPoseID { get; private set; }
+
+		[Tooltip("Should this GrabAnchor use a different Proximity Pose than specified by the Grabbable component?")]
+		[SerializeField] bool _overrideProximityPose;
+		public bool OverrideProximityPose { get { return _overrideProximityPose; } }
+
+		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While the player's hand is near this object, the specified parameter will be set to true.")]
+		[SerializeField] string _proximityPose;
+		public int ProximityPoseID { get; private set; }
+
 
 		[Tooltip("Should this GrabAnchor have a different OrientToHand setting than specified by the Grabbable component?")]
 		[SerializeField] bool _overrideOrientToHand;
@@ -100,7 +109,7 @@ namespace HandsOnVR
 		{
 			_xform = GetComponent<Transform>();
 
-			if (_overridePose)
+			if (_overrideGrabPose)
 			{
 				GrabPoseID = Animator.StringToHash(_grabPose);
 			}

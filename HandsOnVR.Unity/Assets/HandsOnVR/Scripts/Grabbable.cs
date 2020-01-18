@@ -23,7 +23,7 @@ namespace HandsOnVR
 		{
 			get {
 				// Check for override in current anchor
-				if (_currentAnchor >= 0 && _grabAnchors[_currentAnchor].OverridePose)
+				if (_currentAnchor >= 0 && _grabAnchors[_currentAnchor].OverrideGrabPose)
 				{
 					return _grabAnchors[_currentAnchor].GrabPoseID;
 				}
@@ -36,12 +36,24 @@ namespace HandsOnVR
 		}
 
 
+		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While the player's hand is near this object, the specified parameter will be set to true.")]
+		[SerializeField] string _proximityPose;
+		public string ProximityPose => _proximityPose;
+
+		int _proximityPoseID;
+		public int ProximityPoseID
+		{
+			get => _proximityPoseID;
+			private set => _proximityPoseID = value;
+		}
+
+
 		[SerializeField] bool _orientToHand = true;
 		public bool OrientToHand
 		{
 			get {
 				// Check for override in current anchor
-				if (_currentAnchor >= 0 && _grabAnchors[_currentAnchor].OverridePose)
+				if (_currentAnchor >= 0 && _grabAnchors[_currentAnchor].OverrideGrabPose)
 				{
 					return _grabAnchors[_currentAnchor].OrientToHand;
 				}
@@ -81,7 +93,6 @@ namespace HandsOnVR
 
 		Transform _xform;
 		IGrabAnchor[] _grabAnchors;
-		//Grabber[] _grabbedBy;
 		int _currentAnchor = -1;
 
 		// Maximum distance the hand may be from a hand anchor for that anchor to be grabbable
@@ -92,17 +103,18 @@ namespace HandsOnVR
 		public bool SupportsHand(Hand hand) => true;
 		public bool MirrorForOtherHand => false;
 		public GrabAnchor.Order GrabOrder => GrabAnchor.Order.FirstOrSecond;
-		public bool OverridePose => false;
+		public bool OverrideGrabPose => false;
 		public bool OverrideOrientToHand => false;
-
+		public bool OverrideProximityPose => false;
 
 
 		virtual protected void Start()
 		{
 			GrabPoseID = Animator.StringToHash(_grabPose);
+			ProximityPoseID = Animator.StringToHash(_proximityPose);
+
 			Body = GetComponent<Rigidbody>();
 			_grabAnchors = GetComponentsInChildren<GrabAnchor>();
-			//_grabbedBy = new Grabber[_grabAnchors.Length];
 			_xform = GetComponent<Transform>();
 		}
 

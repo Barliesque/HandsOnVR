@@ -8,17 +8,19 @@ namespace HandsOnVR
 
 		bool SupportsHand(Hand hand);
 		bool MirrorForOtherHand { get; }
-
 		GrabAnchor.Order GrabOrder { get; }
-		int GrabPoseID { get; }
-		bool OrientToHand { get; }
 
 		Vector3 GetPosition(Hand hand);
 		Quaternion GetRotation(Hand hand);
 		Vector3 GetUp(Hand hand);
 
-		bool OverridePose { get; }
+		bool OverrideGrabPose { get; }
+		bool OverrideProximityPose { get; }
 		bool OverrideOrientToHand { get; }
+
+		int GrabPoseID { get; }
+		int ProximityPoseID { get; }
+		bool OrientToHand { get; }
 
 	}
 }

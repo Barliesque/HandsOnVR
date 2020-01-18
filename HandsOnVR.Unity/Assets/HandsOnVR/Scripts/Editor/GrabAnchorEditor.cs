@@ -46,7 +46,8 @@ namespace HandsOnVR.Editor
 
 			EditorTools.Header("Grabbable Overrides");
 			EditorTools.BeginInfoBox();
-			if (PropertyField("_overridePose").boolValue)
+
+			if (PropertyField("_overrideGrabPose").boolValue)
 			{
 				PropertyField("_grabPose");
 			} else
@@ -55,6 +56,20 @@ namespace HandsOnVR.Editor
 				EditorGUILayout.TextField("Grab Pose", grabbable.GrabPose);
 				GUI.enabled = true;
 			}
+
+			//TODO  Support proximity pose overrides in GrabAnchors
+			/*
+			if (PropertyField("_overrideProximityPose").boolValue)
+			{
+				PropertyField("_proximityPose");
+			}
+			else
+			{
+				GUI.enabled = false;
+				EditorGUILayout.TextField("Proximity Pose", grabbable.ProximityPose);
+				GUI.enabled = true;
+			}
+			*/
 
 			EditorTools.Separator();
 
