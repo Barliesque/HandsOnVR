@@ -170,7 +170,7 @@ namespace Barliesque.InspectorTools.Editor
 		static public void Separator()
 		{
 			EditorGUILayout.Space();
-			GUILayout.Box(new GUIContent(), GUILayout.ExpandWidth(true), GUILayout.Height(1f));
+			GUILayout.Box(new GUIContent(), GUILayout.ExpandWidth(true), GUILayout.Height(3f));
 			EditorGUILayout.Space();
 		}
 
