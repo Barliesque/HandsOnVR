@@ -8,7 +8,7 @@ namespace HandsOnVR
 	/// <summary>
 	/// Component in hands that handles the mechanics of grabbing objects.  (See: Grabbable.cs)
 	/// </summary>
-	[RequireComponent(typeof(GrabJoint), typeof(CapsuleCollider))]
+	[RequireComponent(typeof(GrabAttacher), typeof(CapsuleCollider))]
 	public class Grabber : MonoBehaviour
 	{
 		[SerializeField] HandController _controller;
@@ -37,7 +37,7 @@ namespace HandsOnVR
 
 		Grabbable _grabbed;
 		RaycastHit[] _hits = new RaycastHit[64];
-		GrabJoint _joint;
+		GrabAttacher _joint;
 		CapsuleCollider _triggerVolume;
 
 		PoseTrigger _poseTrigger;
@@ -85,7 +85,7 @@ namespace HandsOnVR
 
 		private void Awake()
 		{
-			_joint = GetComponent<GrabJoint>();
+			_joint = GetComponent<GrabAttacher>();
 			_triggerVolume = GetComponent<CapsuleCollider>();
 			MaxRadius = _triggerVolume.bounds.size.magnitude;
 		}
@@ -377,7 +377,6 @@ namespace HandsOnVR
 
 		void SetProximityPose(int poseID, PoseTrigger trigger = null)
 		{
-			Debug.Log($"Set proximity pose {poseID}");
 			_proximityPoseID = poseID;
 			_poseTrigger = trigger;
 			SetHandPose(_proximityPoseID, true);
@@ -385,7 +384,6 @@ namespace HandsOnVR
 
 		void ClearProximityPose()
 		{
-			Debug.Log($"Clear proximity pose {_proximityPoseID}");
 			SetHandPose(_proximityPoseID, false);
 			_proximityPoseID = 0;
 			_poseTrigger = null;

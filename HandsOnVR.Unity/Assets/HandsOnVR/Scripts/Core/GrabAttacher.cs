@@ -6,7 +6,7 @@ namespace HandsOnVR
 	/// <summary>
 	/// Bring a grabbed object to the hand, by applying force to its Rigidbody
 	/// </summary>
-	public class GrabJoint : MonoBehaviour
+	public class GrabAttacher : MonoBehaviour
 	{
 		[SerializeField] Rigidbody _grabbedBody;
 		public Rigidbody GrabbedBody => _grabbedBody;
