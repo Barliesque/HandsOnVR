@@ -14,8 +14,6 @@ namespace HandsOnVR
 		public UnityEvent OnButtonPressed;
 		public UnityEvent OnButtonReleased;
 
-		public enum Axis { X,Y,Z }
-
 		public bool IsDown { get; private set; }
 		public bool IsUp { get; private set; }
 
