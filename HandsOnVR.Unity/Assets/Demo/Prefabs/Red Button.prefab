@@ -509,10 +509,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8322336d5eac8ff4f9b37fa052875c8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _axisOfMovement: 1
+  _axisOfMovement: 2
   _upPosition: 0
   _downPosition: -0.015
   _springiness: 0.25
+  OnButtonPressed:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  OnButtonReleased:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!54 &5584622385443542909
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -906,7 +916,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7437561433751961864}
   m_Layer: 0
-  m_Name: Button
+  m_Name: Red Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

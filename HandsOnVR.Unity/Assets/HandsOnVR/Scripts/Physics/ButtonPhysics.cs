@@ -7,7 +7,7 @@ namespace HandsOnVR
 	[RequireComponent(typeof(Rigidbody))]
 	public class ButtonPhysics : MonoBehaviour
 	{
-		[SerializeField] Axis _axisOfMovement;
+		[SerializeField] Axis _axisOfMovement = Axis.Y;
 		[SerializeField] float _upPosition;
 		[SerializeField] float _downPosition;
 		[SerializeField, Range(0f, 1f)] float _springiness = 0.25f;
