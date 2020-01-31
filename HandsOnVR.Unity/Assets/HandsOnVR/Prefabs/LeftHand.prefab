@@ -140,7 +140,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _controller: {fileID: 164241312734943412}
-  Transition: 0
   MatchPosition: 1
   MatchRotation: 1
   _attachPoint: {fileID: 4496440997919749244}
@@ -261,7 +260,6 @@ MonoBehaviour:
   _target: {fileID: 0}
   _secondTarget: {fileID: 0}
   _handBody: {fileID: 3975283621250364015}
-  _engageTime: 0.15
 --- !u!136 &3874723897149308482
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1498,11 +1496,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LeftHandGhost
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 0b54753cbe5bb4e4991524008d2b712a,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 0b54753cbe5bb4e4991524008d2b712a,
         type: 3}
