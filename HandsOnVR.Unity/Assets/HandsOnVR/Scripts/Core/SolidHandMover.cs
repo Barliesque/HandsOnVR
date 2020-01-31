@@ -12,7 +12,7 @@ namespace HandsOnVR
 	{
 
 		[SerializeField] HandController _controller;
-		[Range(0, 1)] public float Transition;
+		
 		public bool MatchPosition = true;
 		public bool MatchRotation = true;
 
@@ -20,7 +20,9 @@ namespace HandsOnVR
 		[SerializeField] GrabAttachPoint _attachPoint;
 
 		private Transform _xform;
-
+		Vector3 _targetPos;
+		Quaternion _targetRot;
+		float _transition;
 
 		private void Start()
 		{
@@ -33,6 +35,15 @@ namespace HandsOnVR
 			if (_controller == null) return;
 
 			if (Anchor == null)
+			{
+				_transition *= 0.875f;
+				if (_transition <= 0.01f) _transition = 0f;
+			} else
+			{
+				_transition = Mathf.Lerp(_transition, 1f, 0.125f);
+			}
+
+			if (Anchor == null && _transition <= 0f)
 			{
 				if (MatchRotation)
 				{
@@ -49,15 +60,15 @@ namespace HandsOnVR
 				{
 					var offsetPos = _xform.position - _attachPoint.Position;
 					//_xform.position = Anchor.GetPosition(hand) + offsetPos;
-					var targetPos = Anchor.GetPosition(hand) + offsetPos;
-					_xform.position = Vector3.Lerp(_controller.Position, targetPos, Transition);
+					if (Anchor != null) _targetPos = Anchor.GetPosition(hand) + offsetPos;
+					_xform.position = Vector3.Lerp(_controller.Position, _targetPos, _transition);
 				}
 
 				if (MatchRotation)
 				{
 					//_xform.rotation = Anchor.GetRotation(hand);
-					var targetRot = Anchor.GetRotation(hand);
-					_xform.rotation = Quaternion.Lerp(_controller.Rotation, targetRot, Transition);
+					if (Anchor != null) _targetRot = Anchor.GetRotation(hand);
+					_xform.rotation = Quaternion.Lerp(_controller.Rotation, _targetRot, _transition);
 				}
 
 			}

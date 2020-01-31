@@ -220,22 +220,6 @@ namespace HandsOnVR
 					_handColliders.SetActive(true);
 				}
 			}
-
-			if (_grabbed != null && _solidHandMover.Transition < 1f)
-			{
-				// Move the solid hand to the grabbed object
-				_solidHandMover.Transition = Mathf.Clamp01(_solidHandMover.Transition + Time.unscaledDeltaTime * 2f);
-			}
-
-			if (_grabbed == null && _solidHandMover.Transition > 0f)
-			{
-				// Move the solid hand back to HandController
-				_solidHandMover.Transition = Mathf.Clamp01(_solidHandMover.Transition - Time.unscaledDeltaTime * 2f);
-				if (_solidHandMover.Transition == 0f)
-				{
-					_solidHandMover.Anchor = null;
-				}
-			}
 		}
 
 
