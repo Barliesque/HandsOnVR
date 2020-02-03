@@ -30,7 +30,7 @@ namespace HandsOnVR
 		}
 
 
-		void Update()
+		void FixedUpdate()
 		{
 			if (_controller == null) return;
 
