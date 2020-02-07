@@ -26,7 +26,7 @@ namespace HandsOnVR
 
 
 		[Tooltip("Which hand was this GrabAnchor placed for?")]
-		[SerializeField] Hand _primaryHand = Hand.Right;
+		[SerializeField, EnumPopup] Hand _primaryHand = Hand.Right;
 		public bool SupportsHand(Hand hand)
 		{
 			return _mirrorForOtherHand || (_primaryHand == hand);
