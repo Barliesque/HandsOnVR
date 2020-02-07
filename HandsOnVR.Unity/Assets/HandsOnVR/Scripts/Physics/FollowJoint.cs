@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 namespace HandsOnVR
 {
 	/// <summary>
-	/// Make this object follow a transform, in a physics-based manner.  May be paired with the PropAttacher component.
+	/// Make this object follow a transform, in a physics-based manner.
 	/// </summary>
 	[RequireComponent(typeof(Rigidbody))]
 	[ExecuteInEditMode]
@@ -115,7 +115,8 @@ namespace HandsOnVR
 				if (!float.IsInfinity(axis.x))
 				{
 					if (angle > 180f) angle -= 360f;
-					_body.angularVelocity = (TurnSpeed * Mathf.Deg2Rad * angle / Time.fixedUnscaledDeltaTime) * axis.normalized;
+					var angVel = (TurnSpeed * Mathf.Deg2Rad * angle / Time.fixedUnscaledDeltaTime) * axis.normalized;
+					_body.angularVelocity = float.IsInfinity(angVel.sqrMagnitude) ? Vector3.zero : angVel;
 				}
 			}
 		}

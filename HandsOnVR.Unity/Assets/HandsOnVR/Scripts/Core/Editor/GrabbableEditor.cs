@@ -60,7 +60,7 @@ namespace HandsOnVR.Editor
 				}
 				else
 				{
-					EditorTools.HelpBox("To create/edit GrabAnchors, place this Grabbable object under the AttachPoint of either hand of the Player Rig.", MessageType.Info);
+					EditorTools.HelpBox("To create/edit GrabAnchors, temporarily place this Grabbable object under the AttachPoint of either hand of the Player Rig.", MessageType.Info);
 				}
 			}
 
