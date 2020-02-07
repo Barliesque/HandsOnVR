@@ -11,8 +11,8 @@ namespace HandsOnVR
 	[RequireComponent(typeof(GrabAttacher), typeof(CapsuleCollider))]
 	public class Grabber : MonoBehaviour
 	{
-		[SerializeField] HandController _controller;
-		public HandController Controller { get { return _controller; } }
+		[SerializeField] HandControllerBase _controller;
+		public HandControllerBase Controller { get { return _controller; } }
 
 		[SerializeField] Transform _focusPoint;
 		[SerializeField] Animator _handSolid;
@@ -28,6 +28,7 @@ namespace HandsOnVR
 		public event GrabberEvent OnGrabBegin;
 		public event GrabberEvent OnGrabEnd;
 
+		public bool IsGrabbing => _grabbed;
 
 		/// <summary>Colliders currently intersecting the trigger volume, and the Grabbable to which they belong</summary>
 		Dictionary<Collider, Grabbable> _grabbables = new Dictionary<Collider, Grabbable>();
@@ -200,12 +201,14 @@ namespace HandsOnVR
 
 		private void Update()
 		{
-			// Start grabbing an object?
-			if (_controller.Grip.Began && _grabbables.Count > 0)
+			if (_controller.Grip.Began)
 			{
-				BeginGrab();
+				// Start grabbing an object?
+				if (_controller.Grip.Began && _grabbables.Count > 0)
+				{
+					BeginGrab();
+				}
 			}
-
 			// Grab release?
 			else if (_grabbed != null && _controller.Grip.Ended)
 			{
