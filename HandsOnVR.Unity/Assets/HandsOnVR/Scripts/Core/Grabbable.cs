@@ -88,6 +88,19 @@ namespace HandsOnVR
 		public event ReleaseHandler OnReleased;
 		public delegate void ReleaseHandler(Grabbable grabbed, Grabber fromGrabber);
 
+		/// <summary>
+		/// Invoked when this object enters the trigger volume of the grabber.
+		/// </summary>
+		public event GrabberApproachHandler OnGrabberApproach;
+		public delegate void GrabberApproachHandler(Grabbable grabbable, Grabber grabber);
+		internal void GrabberApproach(Grabber grabber) => OnGrabberApproach?.Invoke(this, grabber);
+
+		/// <summary>
+		/// Invoked when this object exits the trigger volume of the grabber.
+		/// </summary>
+		public event GrabberDepartHandler OnGrabberDepart;
+		public delegate void GrabberDepartHandler(Grabbable grabbable, Grabber grabber);
+		internal void GrabberDepart(Grabber grabber) => OnGrabberDepart?.Invoke(this, grabber);
 
 		public Rigidbody Body { get; private set; }
 
@@ -287,6 +300,7 @@ namespace HandsOnVR
 				}
 			}
 		}
+
 
 		public Vector3 GetPosition(Hand hand) //TODO  Consider passing the hand controller instead.  Then the grabbable could return the hand's point of contact as the position.
 		{
