@@ -91,6 +91,9 @@ namespace HandsOnVR
 
 		public Rigidbody Body { get; private set; }
 
+		public bool HasExternalForce = false;
+
+
 		Transform _xform;
 		IGrabAnchor[] _grabAnchors;
 		int _currentAnchor = -1;

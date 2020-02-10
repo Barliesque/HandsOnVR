@@ -25,6 +25,7 @@ namespace HandsOnVR
 
 		[SerializeField] Rigidbody _handBody;
 
+		[HideInInspector] public bool LimitEngagement;
 
 		float _engaged = 1f;
 		Hand _firstGrabbedBy;
@@ -77,6 +78,7 @@ namespace HandsOnVR
 				{
 					_engaged = Mathf.Lerp(_engaged, 1f, 0.125f);
 				}
+				var engaged = _engaged * (LimitEngagement ? 0.33f : 1f);
 
 				if (isTwoHanded)
 				{
@@ -86,7 +88,7 @@ namespace HandsOnVR
 
 					// Blend the position deltas of the each hand compared to its anchor
 					var delta2 = (_secondTarget.position - secondAnchorPos) * (_moveSpeed / (1f + _grabbedBody.mass));
-					delta = Vector3.LerpUnclamped(delta, delta2, 0.5f * _engaged);
+					delta = Vector3.LerpUnclamped(delta, delta2, 0.5f * engaged);
 
 					// TODO  Calculate stretch, twist and bend
 					// TODO  Add option to auto-release second hand if stretch goes beyond a tolerance.  Priority could be specified by GrabAnchors
@@ -112,7 +114,7 @@ namespace HandsOnVR
 
 				//! Not sure if there's any difference between these two in terms of natural behavior
 				//_grabbedBody.velocity = Vector3.Lerp(_grabbedBody.velocity, delta + handVelocity, _engaged);
-				_grabbedBody.AddForce(Vector3.Lerp(_grabbedBody.velocity, delta + handVelocity, _engaged) - _grabbedBody.velocity, ForceMode.VelocityChange);
+				_grabbedBody.AddForce(Vector3.Lerp(_grabbedBody.velocity, delta + handVelocity, engaged) - _grabbedBody.velocity, ForceMode.VelocityChange);
 
 				// Convert angular delta from Quaternion to Angle/Axis
 				angDelta.ToAngleAxis(out float angle, out Vector3 axis);
@@ -124,7 +126,7 @@ namespace HandsOnVR
 				if (angle > 180f) angle -= 360f;
 				var magnitude = (_turnSpeed * Mathf.Deg2Rad * angle / Time.fixedUnscaledDeltaTime);
 				var newAngVel = magnitude * axis.normalized;
-				_grabbedBody.angularVelocity = Vector3.Lerp(_grabbedBody.angularVelocity, newAngVel, _engaged);
+				_grabbedBody.angularVelocity = Vector3.Lerp(_grabbedBody.angularVelocity, newAngVel, engaged);
 				_grabbedBody.AddTorque(handAngVelocity, ForceMode.VelocityChange);
 			} else
 			{
