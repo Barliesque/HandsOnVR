@@ -11,7 +11,7 @@ namespace HandsOnVR
 	public class SolidHandMover : MonoBehaviour
 	{
 
-		[SerializeField] HandController _controller;
+		[SerializeField] HandControllerBase _controller;
 		
 		public bool MatchPosition = true;
 		public bool MatchRotation = true;

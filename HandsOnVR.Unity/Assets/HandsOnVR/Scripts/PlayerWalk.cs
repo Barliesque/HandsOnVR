@@ -16,8 +16,8 @@ namespace HandsOnVR
 		float _runSpeed = 4f;
 
 		[Header("Component Links")]
-		[SerializeField] HandController _rightHand;
-		[SerializeField] HandController _leftHand;
+		[SerializeField] HandControllerBase _rightHand;
+		[SerializeField] HandControllerBase _leftHand;
 
 		Transform _xform;
 		Transform _right;

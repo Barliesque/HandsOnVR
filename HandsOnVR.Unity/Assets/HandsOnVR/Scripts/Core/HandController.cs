@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Barliesque.InspectorTools;
+using System;
 using UnityEngine;
 
 
@@ -12,31 +13,40 @@ namespace HandsOnVR
 	/// <summary>
 	/// Match this transform to an Oculus Touch controller and monitor the states of its buttons.
 	/// </summary>
-	public class HandController : MonoBehaviour
+	public class HandController : HandControllerBase
 	{
-		[SerializeField] Hand _hand;
-		public Hand Hand { get { return _hand; } }
+		[SerializeField, EnumPopup] Hand _hand;
+		override public Hand Hand { get { return _hand; } }
 
 		// Note: Open an Inspector panel in debug mode to monitor these ButtonState values at runtime
 
-		public ButtonState Grip { get; private set; } = new ButtonState();
-		public ButtonState Trigger { get; private set; } = new ButtonState();
-		public ButtonState AorX { get; private set; } = new ButtonState();
-		public ButtonState BorY { get; private set; } = new ButtonState();
-		public ButtonState ThumbRest { get; private set; } = new ButtonState();
+		override public ButtonState Grip { get; protected set; } = new ButtonState();
+		override public ButtonState Trigger { get; protected set; } = new ButtonState();
+		override public ButtonState AorX { get; protected set; } = new ButtonState();
+		override public ButtonState BorY { get; protected set; } = new ButtonState();
+		override public ButtonState ThumbRest { get; protected set; } = new ButtonState();
 
+		override public bool IsConnected
+		{
+			get
+			{
+				var controller = _hand == Hand.Left ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch;
+				return (OVRInput.IsControllerConnected(controller));
+			}
+		}
 
 		Transform _xform;
 		Transform Xform
 		{
-			get {
+			get
+			{
 				if (_xform == null) _xform = GetComponent<Transform>();
 				return _xform;
 			}
 		}
 
-		public Vector3 Position => Xform.position;
-		public Quaternion Rotation => Xform.rotation;
+		override public Vector3 Position => Xform.position;
+		override public Quaternion Rotation => Xform.rotation;
 
 
 		private void Update()

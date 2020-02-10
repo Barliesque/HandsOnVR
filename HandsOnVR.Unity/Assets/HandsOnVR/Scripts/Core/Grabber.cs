@@ -11,8 +11,8 @@ namespace HandsOnVR
 	[RequireComponent(typeof(GrabAttacher), typeof(CapsuleCollider))]
 	public class Grabber : MonoBehaviour
 	{
-		[SerializeField] HandController _controller;
-		public HandController Controller { get { return _controller; } }
+		[SerializeField] HandControllerBase _controller;
+		public HandControllerBase Controller { get { return _controller; } }
 
 		[SerializeField] Transform _focusPoint;
 		[SerializeField] Animator _handSolid;
@@ -28,6 +28,7 @@ namespace HandsOnVR
 		public event GrabberEvent OnGrabBegin;
 		public event GrabberEvent OnGrabEnd;
 
+		public bool IsGrabbing => _grabbed;
 
 		/// <summary>Colliders currently intersecting the trigger volume, and the Grabbable to which they belong</summary>
 		Dictionary<Collider, Grabbable> _grabbables = new Dictionary<Collider, Grabbable>();
@@ -134,6 +135,7 @@ namespace HandsOnVR
 					{
 						_canGrab.Add(new GrabbableStats() { grabbable = grabbable, colliders = 1 });
 						OnGrabbableEnter?.Invoke(grabbable);
+						grabbable.GrabberApproach(this);
 
 						if (!_grabbed && _proximityPoseID == 0)
 						{
@@ -160,37 +162,25 @@ namespace HandsOnVR
 				var grabbable = _grabbables[other];
 				_grabbables.Remove(other);
 
-				if (_grabbables.Count == 0)
+				// Remove collider count from appropriate Grabbable
+				for (int i = 0, len = _canGrab.Count; i < len; i++)
 				{
-					// No colliders left?  Then there's nothing to grab...
-					_canGrab.Clear();
+					var item = _canGrab[i];
+					if (item.grabbable == grabbable)
+					{
+						_canGrab[i] = item.DecrementColliders();
 
-					// If the proximity pose was set, then clear it
-					if (_proximityPoseID != 0)
-					{
-						ClearProximityPose();
-					}
-				}
-				else
-				{
-					// Remove collider count from appropriate Grabbable
-					for (int i = 0, len = _canGrab.Count; i < len; i++)
-					{
-						var item = _canGrab[i];
-						if (item.grabbable == grabbable)
+						if (item.colliders == 0)
 						{
-							_canGrab[i] = item.DecrementColliders();
-							if (item.colliders == 0)
-							{
-								_canGrab.RemoveAt(i);
-								OnGrabbableExit?.Invoke(grabbable);
+							_canGrab.RemoveAt(i);
+							OnGrabbableExit?.Invoke(grabbable);
+							grabbable.GrabberDepart(this);
 
-								if (!_poseTrigger && _proximityPoseID != 0 && grabbable.ProximityPoseID == _proximityPoseID)
-								{
-									ClearProximityPose();
-								}
-								break;
+							if (!_poseTrigger && _proximityPoseID != 0 && grabbable.ProximityPoseID == _proximityPoseID)
+							{
+								ClearProximityPose();
 							}
+							break;
 						}
 					}
 				}
@@ -200,12 +190,14 @@ namespace HandsOnVR
 
 		private void Update()
 		{
-			// Start grabbing an object?
-			if (_controller.Grip.Began && _grabbables.Count > 0)
+			if (_controller.Grip.Began)
 			{
-				BeginGrab();
+				// Start grabbing an object?
+				if (_controller.Grip.Began && _grabbables.Count > 0)
+				{
+					BeginGrab();
+				}
 			}
-
 			// Grab release?
 			else if (_grabbed && _controller.Grip.Ended)
 			{
