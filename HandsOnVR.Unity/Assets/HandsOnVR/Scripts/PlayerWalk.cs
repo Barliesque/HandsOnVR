@@ -18,6 +18,7 @@ namespace HandsOnVR
 		[Header("Component Links")]
 		[SerializeField] HandControllerBase _rightHand;
 		[SerializeField] HandControllerBase _leftHand;
+		[SerializeField] Transform _head;
 
 		Transform _xform;
 		Transform _right;
@@ -52,6 +53,16 @@ namespace HandsOnVR
 			var walk = right ^ left;
 			var run = right && left && (forwardR == forwardL);
 
+			bool head = false;
+			if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+			{
+				walk = forwardR = head = true;
+			}
+			if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+			{
+				walk = backwardR = head = true;
+			}
+
 			if (!walk && !run)
 			{
 				_velocity = Mathf.Lerp(_velocity, 0f, 0.125f);
@@ -59,7 +70,11 @@ namespace HandsOnVR
 
 			if (walk)
 			{
-				if (right)
+				if (head)
+				{
+					_direction = _head.forward * (forwardR ? 1f : -1f);
+				}
+				else if (right)
 				{
 					_direction = _right.forward * (forwardR ? 1f : -1f);
 				}
@@ -91,6 +106,5 @@ namespace HandsOnVR
 
 
 	}
-
 
 }
