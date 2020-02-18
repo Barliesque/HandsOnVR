@@ -38,7 +38,7 @@ namespace HandsOnVR
 
 		Grabbable _grabbed;
 		RaycastHit[] _hits = new RaycastHit[64];
-		GrabAttacher _joint;
+		GrabAttacher _attacher;
 		CapsuleCollider _triggerVolume;
 
 		PoseTrigger _poseTrigger;
@@ -80,13 +80,13 @@ namespace HandsOnVR
 		}
 
 
-		public IGrabAnchor GrabbedAnchor { get { return _joint.GrabbedAnchor; } }
+		public IGrabAnchor GrabbedAnchor { get { return _attacher.GrabbedAnchor; } }
 
 		public float MaxRadius { get; private set; }
 
 		private void Awake()
 		{
-			_joint = GetComponent<GrabAttacher>();
+			_attacher = GetComponent<GrabAttacher>();
 			_triggerVolume = GetComponent<CapsuleCollider>();
 			MaxRadius = _triggerVolume.bounds.size.magnitude;
 		}
@@ -199,13 +199,18 @@ namespace HandsOnVR
 				}
 			}
 			// Grab release?
-			else if (_grabbed != null && _controller.Grip.Ended)
+			else if (_grabbed && _controller.Grip.Ended)
 			{
 				EndGrab();
 			}
 
+			if (_grabbed)
+			{
+				_attacher.LimitEngagement = _grabbed.HasExternalForce;
+			}
+
 			// After grab has been released, wait for hand to move away before reactivating colliders
-			if (_grabbed == null && !_handColliders.activeSelf)
+			if (!_grabbed && !_handColliders.activeSelf)
 			{
 				if (_grabbables.Count == 0)
 				{
@@ -237,7 +242,7 @@ namespace HandsOnVR
 					if (grabbed.GrabbedBySecond == this)
 					{
 						// The first hand to grab will control the object for both hands
-						grabbed.GrabbedBy.SetSecondGrab(anchor, _joint.Target);
+						grabbed.GrabbedBy.SetSecondGrab(anchor, _attacher.Target);
 					}
 					else
 					{
@@ -263,12 +268,12 @@ namespace HandsOnVR
 
 		void SetGrab(Rigidbody grabbedBody, IGrabAnchor anchor)
 		{
-			_joint.SetGrab(grabbedBody, anchor, _controller.Hand);
+			_attacher.SetGrab(grabbedBody, anchor, _controller.Hand);
 		}
 
 		void SetSecondGrab(IGrabAnchor anchor, Transform target)
 		{
-			_joint.SetSecondGrab(anchor, target);
+			_attacher.SetSecondGrab(anchor, target);
 		}
 
 		void EndGrab()
@@ -282,7 +287,7 @@ namespace HandsOnVR
 			else if (_grabbed.GrabbedBySecond != null)
 			{
 				// This is the first hand being released.  The second must now use its own joint to grab
-				_grabbed.GrabbedBySecond.SetGrab(_grabbed.Body, _joint.SecondAnchor);
+				_grabbed.GrabbedBySecond.SetGrab(_grabbed.Body, _attacher.SecondAnchor);
 			}
 			var grabbed = _grabbed;
 			_grabbed.Release(this);

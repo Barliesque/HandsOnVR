@@ -11,6 +11,12 @@ namespace HandsOnVR.Editor
 		{
 			EditorGUI.BeginChangeCheck();
 
+			var body = PropertyField("Body", "This Body");
+			if (!body.objectReferenceValue)
+			{
+				body.objectReferenceValue = inst.GetComponentInParent<Rigidbody>();
+			}
+
 			PropertyField("ConnectedBody");
 			PropertyField("AxisOfMovement");
 			PropertyField("AnchorPosition");
@@ -30,6 +36,7 @@ namespace HandsOnVR.Editor
 			}
 		}
 
+		/*
 		private void OnSceneGUI()
 		{
 			var inst = target as SliderJoint;
@@ -51,7 +58,7 @@ namespace HandsOnVR.Editor
 			var inst = target as SliderJoint;
 			return (inst.AxisOfMovement & axis) == axis;
 		}
-
+		*/
 
 	}
 }
