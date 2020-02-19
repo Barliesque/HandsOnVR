@@ -22,6 +22,9 @@ namespace HandsOnVR
 		[SerializeField] Grabber _otherHand;
 		[SerializeField] LayerMask _grabbableLayers = 0x7FFFFFFF;
 
+		public Animator HandSolid => _handSolid;
+		public Animator HandGhost => _handGhost;
+
 		public delegate void GrabberEvent(Grabbable item);
 		public event GrabberEvent OnGrabbableEnter;
 		public event GrabberEvent OnGrabbableExit;
