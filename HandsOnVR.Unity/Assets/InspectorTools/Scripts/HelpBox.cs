@@ -34,7 +34,10 @@ public class HelpBoxAttributeDrawer : DecoratorDrawer
 		if (helpBoxAttribute == null) return base.GetHeight();
 		var helpBoxStyle = (GUI.skin != null) ? GUI.skin.GetStyle("helpbox") : null;
 		if (helpBoxStyle == null) return base.GetHeight();
-		return helpBoxStyle.CalcHeight(new GUIContent(string.Format("{0}----", helpBoxAttribute.text)), EditorGUIUtility.currentViewWidth) + helpBoxAttribute.spaceAbove + helpBoxAttribute.spaceBelow;
+		helpBoxStyle.richText = false;
+		var height = helpBoxStyle.CalcHeight(new GUIContent(string.Format("{0}----", helpBoxAttribute.text)), EditorGUIUtility.currentViewWidth) + helpBoxAttribute.spaceAbove + helpBoxAttribute.spaceBelow;
+		helpBoxStyle.richText = true;
+		return height;
 	}
 	public override void OnGUI(Rect position)
 	{
