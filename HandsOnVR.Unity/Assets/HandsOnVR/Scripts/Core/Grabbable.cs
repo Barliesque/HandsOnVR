@@ -124,7 +124,7 @@ namespace HandsOnVR
 		public bool OverrideProximityPose => false;
 
 
-		virtual protected void Start()
+		private void Awake()
 		{
 			GrabPoseID = Animator.StringToHash(_grabPose);
 			ProximityPoseID = Animator.StringToHash(_proximityPose);
@@ -140,7 +140,7 @@ namespace HandsOnVR
 		/// </summary>
 		/// <param name="grabbedBy">The Grabber attempting to grab this object</param>
 		/// <returns>True is returned if grab is allowed, or false if it is not.</returns>
-		internal virtual bool TryGrab(Grabber grabbedBy, out IGrabAnchor anchor)
+		internal bool TryGrab(Grabber grabbedBy, out IGrabAnchor anchor)
 		{
 			if (GrabbedBy != null)
 			{
@@ -215,7 +215,6 @@ namespace HandsOnVR
 		}
 
 
-
 		private int FindClosestAnchor(Grabber grabbedBy, IGrabAnchor alreadyGrabbed)
 		{
 			//  Find which anchor is closest to the Grabber
@@ -280,7 +279,7 @@ namespace HandsOnVR
 		}
 
 
-		internal virtual void Release(Grabber fromGrabber)
+		internal void Release(Grabber fromGrabber)
 		{
 			if (GrabbedBySecond == fromGrabber)
 			{
