@@ -7,7 +7,7 @@ namespace Barliesque.InspectorTools.Editor
 	[CustomPropertyDrawer(typeof(EnumFlagsAttribute))]
 	public class EnumFlagsAttributeDrawer : PropertyDrawer
 	{
-		public override void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
+		override public void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
 		{
 			// Make sure tooltip is still shown
 			var tooltip = fieldInfo.GetCustomAttributes(typeof(TooltipAttribute), true);

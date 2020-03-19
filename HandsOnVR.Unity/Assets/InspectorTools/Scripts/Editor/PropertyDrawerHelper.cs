@@ -4,7 +4,7 @@ using UnityEditor;
 
 namespace Barliesque.InspectorTools.Editor
 {
-	public abstract class PropertyDrawerHelper : PropertyDrawer
+	abstract public class PropertyDrawerHelper : PropertyDrawer
 	{
 		int _lines;
 		int _gaps;
@@ -31,7 +31,7 @@ namespace Barliesque.InspectorTools.Editor
 		protected float Margin => (LeftMargin > 0f ? LeftMargin : _originalMargin);
 		string _propTooltip;
 
-		sealed public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+		override public sealed void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
 			var attributes = fieldInfo.GetCustomAttributes(typeof(TooltipAttribute), true);
 			if (attributes != null && attributes.Length > 0)

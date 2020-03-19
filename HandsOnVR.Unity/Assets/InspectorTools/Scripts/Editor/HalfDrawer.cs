@@ -5,7 +5,7 @@ using Barliesque.InspectorTools.Editor;
 [CustomPropertyDrawer(typeof(Half))]
 public class HalfDrawer : PropertyDrawerHelper
 {
-	public override void CustomDrawer()
+	override public void CustomDrawer()
 	{
 		var prop = Property.FindPropertyRelative("_half");
 		var value = Mathf.HalfToFloat((ushort)prop.intValue);

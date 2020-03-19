@@ -504,7 +504,7 @@ namespace Barliesque.InspectorTools.Editor
 		}
 
 
-		private static int GetArrayPageFromTo(int arrayHash, int count, out int from, out int to)
+		static private int GetArrayPageFromTo(int arrayHash, int count, out int from, out int to)
 		{
 			int page = 0;
 			if (_page.ContainsKey(arrayHash)) {
@@ -520,7 +520,7 @@ namespace Barliesque.InspectorTools.Editor
 		}
 
 
-		private static void ArrayPageButtons(int arrayHash, int count)
+		static private void ArrayPageButtons(int arrayHash, int count)
 		{
 			if (count <= ARRAY_PAGE_SIZE) return;
 
@@ -684,7 +684,7 @@ namespace Barliesque.InspectorTools.Editor
 		//***
 
 
-		public static string SelectFile(string label, string path, string extension)
+		static public string SelectFile(string label, string path, string extension)
 		{
 			EditorGUILayout.BeginHorizontal();
 			string filepath = EditorGUILayout.TextField(label, path, GUILayout.ExpandWidth(true));
@@ -696,7 +696,7 @@ namespace Barliesque.InspectorTools.Editor
 		}
 
 
-		public static string SelectFolder(string label, string path)
+		static public string SelectFolder(string label, string path)
 		{
 			EditorGUILayout.BeginHorizontal();
 			string filepath = EditorGUILayout.TextField(label, path, GUILayout.ExpandWidth(true));
@@ -711,7 +711,7 @@ namespace Barliesque.InspectorTools.Editor
 		//***
 
 
-		public static bool ToggleButton(bool state, string label)
+		static public bool ToggleButton(bool state, string label)
 		{
 			bool pressed = false;
 			if (state) {
@@ -726,7 +726,7 @@ namespace Barliesque.InspectorTools.Editor
 		//***
 
 
-		public static bool ScriptField(SerializedObject serializedObject, bool editable = false)
+		static public bool ScriptField(SerializedObject serializedObject, bool editable = false)
 		{
 			EditorGUI.BeginChangeCheck();
 			var wasEnabled = GUI.enabled;

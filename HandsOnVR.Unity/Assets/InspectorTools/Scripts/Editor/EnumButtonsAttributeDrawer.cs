@@ -10,7 +10,7 @@ namespace Barliesque.InspectorTools.Editor
 		const float ButtonHeight = 19f;
 		const float VerticalSpace = 1f;
 
-		public override void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
+		override public void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
 		{
 			// Make sure tooltip is still shown
 			var tooltip = fieldInfo.GetCustomAttributes(typeof(TooltipAttribute), true);
@@ -63,7 +63,7 @@ namespace Barliesque.InspectorTools.Editor
 		}
 
 
-		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+		override public float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
 			// Check for buttons type of rendering
 			var attribute = ((EnumButtonsAttribute)fieldInfo.GetCustomAttributes(typeof(EnumButtonsAttribute), true)[0]);

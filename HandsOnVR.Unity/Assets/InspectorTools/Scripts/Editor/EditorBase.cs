@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace Barliesque.InspectorTools.Editor
 {
-	public abstract class EditorBase : UnityEditor.Editor
+	abstract public class EditorBase : UnityEditor.Editor
 	{
 
 		Dictionary<string, SerializedProperty> _properties = new Dictionary<string, SerializedProperty>();
 
-		protected virtual bool ShowScriptField => true;
+		virtual protected bool ShowScriptField => true;
 
-		sealed public override void OnInspectorGUI()
+		override public sealed void OnInspectorGUI()
 		{
 			serializedObject.Update();
 

@@ -6,12 +6,12 @@ using System;
 namespace Barliesque.InspectorTools.Editor
 {
 
-	public abstract class EditorBase<T> : UnityEditor.Editor where T : UnityEngine.Object
+	abstract public class EditorBase<T> : UnityEditor.Editor where T : UnityEngine.Object
 	{
 
 		Dictionary<string, SerializedProperty> _properties = new Dictionary<string, SerializedProperty>();
 
-		sealed public override void OnInspectorGUI()
+		override public sealed void OnInspectorGUI()
 		{
 			serializedObject.Update();
 			EditorTools.ScriptField(serializedObject);
