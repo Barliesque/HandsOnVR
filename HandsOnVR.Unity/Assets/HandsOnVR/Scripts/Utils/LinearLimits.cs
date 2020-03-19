@@ -5,12 +5,12 @@ namespace HandsOnVR
 {
 
 	[Serializable]
-	public struct Limits
+	public struct LinearLimits
 	{
 		public float Low;
 		public float High;
 
-		public Limits(float low, float high)
+		public LinearLimits(float low, float high)
 		{
 			Low = low;
 			High = high;

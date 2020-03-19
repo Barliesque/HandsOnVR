@@ -6,11 +6,11 @@ using UnityEditor.UIElements;
 namespace HandsOnVR.Editor
 {
 
-    [CustomPropertyDrawer(typeof(Limits))]
-    public class LimitsDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(LinearLimits))]
+    public class LinearLimitsDrawer : PropertyDrawer
     {
 
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        override public VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             // Create property container element.
             var container = new VisualElement();
@@ -26,7 +26,7 @@ namespace HandsOnVR.Editor
             return container;
         }
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        override public void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             // Using BeginProperty / EndProperty on the parent property means that
             // prefab override logic works on the entire property.
