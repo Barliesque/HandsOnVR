@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Barliesque.InspectorTools;
 
 
 namespace HandsOnVR
@@ -10,9 +11,9 @@ namespace HandsOnVR
 	{
 		[HelpBox("To move forward, point either controller in the direction you'd like to go, and push the thumbstick forward.  Push the thumbstick back to go in the reverse direction.  Use both controllers together to run.")]
 
-		[SerializeField, Tooltip("This is the distance to be travelled persecond while walking.")]
+		[SerializeField, Tooltip("This is the distance to be travelled per second while walking.")]
 		float _walkSpeed = 1.5f;
-		[SerializeField, Tooltip("This is the distance to be travelled persecond while running.")]
+		[SerializeField, Tooltip("This is the distance to be travelled per second while running.")]
 		float _runSpeed = 4f;
 
 		[Header("Component Links")]
