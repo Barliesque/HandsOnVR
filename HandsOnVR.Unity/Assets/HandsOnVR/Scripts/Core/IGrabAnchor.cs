@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace HandsOnVR
 {
@@ -22,5 +23,9 @@ namespace HandsOnVR
 		int ProximityPoseID { get; }
 		bool OrientToHand { get; }
 
+		[Obsolete("For internal use only.  Use Grabber.Grab() instead.")]
+		bool TryForceGrab(Grabber grabbedBy, out IGrabAnchor anchor);
+
+		Grabbable Grabbable { get; }
 	}
 }

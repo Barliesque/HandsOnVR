@@ -198,7 +198,7 @@ namespace HandsOnVR
 				// Start grabbing an object?
 				if (_controller.Grip.Began && _grabbables.Count > 0)
 				{
-					BeginGrab();
+					SelectAnchorAndGrab();
 				}
 			}
 			// Grab release?
@@ -213,17 +213,14 @@ namespace HandsOnVR
 			}
 
 			// After grab has been released, wait for hand to move away before reactivating colliders
-			if (!_grabbed && !_handColliders.activeSelf)
+			if (!_grabbed && _grabbables.Count == 0 && !_handColliders.activeSelf)
 			{
-				if (_grabbables.Count == 0)
-				{
-					_handColliders.SetActive(true);
-				}
+				_handColliders.SetActive(true);
 			}
 		}
 
 
-		void BeginGrab()
+		void SelectAnchorAndGrab()
 		{
 			if (_canGrab.Count > 1)
 			{
@@ -238,35 +235,43 @@ namespace HandsOnVR
 				Grabbable grabbed = item.grabbable;
 
 				IGrabAnchor anchor;
+#pragma warning disable 618  // Allow use of internal method Grabbable.TryGrab()
 				if (grabbed.TryGrab(this, out anchor))
+#pragma warning restore 618
 				{
-					_grabbed = grabbed;
-
-					if (grabbed.GrabbedBySecond == this)
-					{
-						// The first hand to grab will control the object for both hands
-						grabbed.GrabbedBy.SetSecondGrab(anchor, _attacher.Target);
-					}
-					else
-					{
-						// Control the object to follow the hand
-						SetGrab(_grabbed.Body, anchor);
-					}
-					_solidHandMover.Anchor = anchor;
-					_handColliders.SetActive(false);
-					if (_grabbed.GrabPoseID != 0)
-					{
-						SetHandPose(_grabbed.GrabPoseID, true);
-					}
-
-					// Grab was successful, so we are done
-					OnGrabBegin?.Invoke(grabbed);
-					ClearProximityPose();
+					GrabByAnchor(anchor);
 					return;
 				}
-				// Grab was unsuccessful, so try the next closest
+				// Grab was unsuccessful, so try the next closest anchor
 				//Debug.Log($"COULD NOT GRAB {grabbed.name}  ...next!");
 			}
+		}
+
+		void GrabByAnchor(IGrabAnchor anchor)
+		{
+			Grabbable grabbed = anchor.Grabbable;
+			_grabbed = grabbed;
+
+			if (grabbed.GrabbedBySecond == this)
+			{
+				// The first hand to grab will control the object for both hands
+				grabbed.GrabbedBy.SetSecondGrab(anchor, _attacher.Target);
+			}
+			else
+			{
+				// Control the object to follow the hand
+				SetGrab(_grabbed.Body, anchor);
+			}
+			_solidHandMover.Anchor = anchor;
+			_handColliders.SetActive(false);
+			if (_grabbed.GrabPoseID != 0)
+			{
+				SetHandPose(_grabbed.GrabPoseID, true);
+			}
+
+			// Grab was successful, so we are done
+			OnGrabBegin?.Invoke(grabbed);
+			ClearProximityPose();
 		}
 
 		void SetGrab(Rigidbody grabbedBody, IGrabAnchor anchor)
@@ -307,6 +312,27 @@ namespace HandsOnVR
 			if (_grabbed != null) EndGrab();
 		}
 
+
+		/// <summary>
+		/// Manually grab an object regardless of its distance from the hand.  False is returned if the specified object could not be grabbed.
+		/// </summary>
+		/// <param name="anchor">A GrabAnchor or Grabbable</param>
+		/// <returns></returns>
+		public bool Grab(IGrabAnchor anchor)
+		{
+			// Already grabbing another object?  Release it!
+			if (_grabbed != null) EndGrab();
+
+#pragma warning disable 618  // Allow use of Internal method ForceGrab
+			if (anchor.TryForceGrab(this, out anchor))
+#pragma warning restore 618
+			{
+				GrabByAnchor(anchor);
+				return true;
+			}
+			return false;
+		}
+		 
 
 		private void SortGrabbables()
 		{

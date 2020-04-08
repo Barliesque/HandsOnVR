@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -123,8 +121,10 @@ namespace HandsOnVR
 		public bool OverrideOrientToHand => false;
 		public bool OverrideProximityPose => false;
 
+		Grabbable IGrabAnchor.Grabbable => this;
 
-		private void Awake()
+
+		virtual protected void Start()
 		{
 			GrabPoseID = Animator.StringToHash(_grabPose);
 			ProximityPoseID = Animator.StringToHash(_proximityPose);
@@ -135,20 +135,14 @@ namespace HandsOnVR
 		}
 
 
-		/// <summary>
-		/// This object is being grabbed. Confirmation is returned whether grab is allowed.
-		/// </summary>
-		/// <param name="grabbedBy">The Grabber attempting to grab this object</param>
-		/// <returns>True is returned if grab is allowed, or false if it is not.</returns>
-		internal bool TryGrab(Grabber grabbedBy, out IGrabAnchor anchor)
+		bool CanBeGrabbed(Grabber grabbedBy)
 		{
-			if (GrabbedBy != null)
+			if (GrabbedBy)
 			{
 				// This object is already grabbed...
 				if (_secondGrabBehavior == SecondGrabBehavior.NoSecondGrab)
 				{
 					// ...Reject second grab.
-					anchor = null;
 					return false;
 				}
 				if (_secondGrabBehavior == SecondGrabBehavior.TransferToSecondGrab)
@@ -161,8 +155,6 @@ namespace HandsOnVR
 			bool allowed = OnGrabbed?.Invoke(this, grabbedBy) ?? true;
 			if (allowed)
 			{
-				IGrabAnchor anchorAlreadyGrabbed = null;
-
 				// Is this the first hand grabbing this object?
 				if (GrabbedBy == null)
 				{
@@ -171,9 +163,28 @@ namespace HandsOnVR
 				else
 				{
 					GrabbedBySecond = grabbedBy;
-					anchorAlreadyGrabbed = grabbedBy.GrabbedAnchor;
 				}
+			}
+			else
+			{
+				Debug.Log($"{name}: Grab blocked by OnGrabbed callback");
+			}
 
+			return allowed;
+		}
+
+
+		/// <summary>
+		/// This object is being grabbed. Confirmation is returned whether grab is allowed.
+		/// </summary>
+		/// <param name="grabbedBy">The Grabber attempting to grab this object.</param>
+		/// <param name="anchor">A reference to the IGrabAnchor that will be grabbed.</param>
+		/// <returns>True is returned if grab is allowed, or false if it is not.</returns>
+		[Obsolete("For internal use only.  Use Grabber.Grab() instead.")]
+		internal bool TryGrab(Grabber grabbedBy, out IGrabAnchor anchor)
+		{
+			if (CanBeGrabbed(grabbedBy))
+			{
 				// By what anchor will it be grabbed?
 				if (_grabAnchors.Length == 0)
 				{
@@ -182,7 +193,7 @@ namespace HandsOnVR
 				}
 				else
 				{
-					_currentAnchor = FindClosestAnchor(grabbedBy, anchorAlreadyGrabbed);
+					_currentAnchor = FindClosestAnchor(grabbedBy, GrabbedBySecond ? GrabbedBy.GrabbedAnchor : null);  //anchorAlreadyGrabbed
 					if (_currentAnchor >= 0)
 					{
 						anchor = _grabAnchors[_currentAnchor];
@@ -196,7 +207,8 @@ namespace HandsOnVR
 						if (GrabbedBySecond)
 						{
 							GrabbedBySecond = null;
-						} else
+						}
+						else
 						{
 							GrabbedBy = null;
 						}
@@ -204,17 +216,20 @@ namespace HandsOnVR
 						return false;
 					}
 				}
+				return true;
 			}
 			else
 			{
-				Debug.Log($"{name}: Grab not allowed by callback");
 				anchor = null;
 				_currentAnchor = -1;
+				return false;
 			}
-			return allowed;
 		}
 
 
+		/// <summary>
+		/// Find which anchor is closest to the Grabber, excluding an anchor that's already grabbed.  Returns index to _grabAnchors[]
+		/// </summary>
 		private int FindClosestAnchor(Grabber grabbedBy, IGrabAnchor alreadyGrabbed)
 		{
 			//  Find which anchor is closest to the Grabber
@@ -279,7 +294,7 @@ namespace HandsOnVR
 		}
 
 
-		internal void Release(Grabber fromGrabber)
+		internal virtual void Release(Grabber fromGrabber)
 		{
 			if (GrabbedBySecond == fromGrabber)
 			{
@@ -318,5 +333,69 @@ namespace HandsOnVR
 		{
 			return _xform.up;
 		}
+
+
+		[Obsolete("For internal use only.  Use Grabber.Grab() instead.")]
+		public bool TryForceGrab(Grabber grabbedBy, out IGrabAnchor anchor) => ForceGrab(this, grabbedBy, out anchor);
+
+		[Obsolete("For internal use only.  Use Grabber.Grab() instead.")]
+		public bool ForceGrab(IGrabAnchor anchor, Grabber grabbedBy, out IGrabAnchor grabbedAnchor)
+		{
+			grabbedAnchor = anchor;
+			bool anchorIsThis = (anchor == (IGrabAnchor)this);
+
+			if (CanBeGrabbed(grabbedBy))
+			{
+				int index = int.MaxValue;
+
+				if (anchorIsThis)
+				{
+					// Only a Grabbable with no anchors can be used as a IGrabAnchor
+					if (!_grabAnchors.IsNullOrEmpty())
+					{
+						index = FindClosestAnchor(grabbedBy, GrabbedBy == this ? null : GrabbedBy.GrabbedAnchor);
+						if (index >= 0)
+						{
+							grabbedAnchor = _grabAnchors[index];
+						} else
+						{
+							Debug.Log($"None of {anchor}'s anchors could be grabbed.");
+						}
+					}
+				}
+				else
+				{
+					// Get index of specified anchor
+					for (index = _grabAnchors.Length - 1; index >= 0; index--)
+					{
+						if (_grabAnchors[index] == anchor) break;
+					}
+					if (index < 0)
+					{
+						// Anchor not found!
+						Debug.LogError($"GrabAnchor ({anchor.Grabbable.name}) specified does not belong to this Grabbable ({name})");
+					}
+				}
+
+				if (index < 0)
+				{
+					// Unsuccessful grab
+					if (GrabbedBySecond == grabbedBy)
+					{
+						GrabbedBySecond = null;
+					}
+					else
+					{
+						GrabbedBy = null;
+					}
+					return false;
+				}
+
+				return true;
+			}
+			return false;
+		}
+
 	}
+
 }

@@ -82,7 +82,7 @@ namespace HandsOnVR
 		Transform _xform;
 		Transform _grabbableXform;
 
-		public Grabbable Parent => _grabbable;
+		public Grabbable Grabbable => _grabbable;
 		Grabbable _grabbable;
 
 
@@ -211,6 +211,9 @@ namespace HandsOnVR
 			Gizmos.color = new Color(0, 1, 0, alpha);
 			Gizmos.DrawLine(pos, pos + (rot * Vector3.up) * 0.05f);
 		}
+
+		[Obsolete("For internal use only.  Use Grabber.Grab() instead.")]
+		public bool TryForceGrab(Grabber grabber, out IGrabAnchor anchor) => Grabbable.ForceGrab(this, grabber, out anchor);
 #endif
 
 	}

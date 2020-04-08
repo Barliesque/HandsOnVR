@@ -16,19 +16,20 @@ namespace HandsOnVR.Editor
 			Hand grabHand = (Hand)0;
 			bool handMatches = true;
 
-			grabbable = inst.GetComponentInParent<Grabbable>(true);
-			attachPt = inst.GetComponentInParent<GrabAttachPoint>(true);
-			if (attachPt)
-			{
-				grabHand = attachPt.Grabber.Controller.Hand;
-				handMatches = inst.SupportsHand(grabHand);
-			}
+				grabbable = inst.GetComponentInParent<Grabbable>(true);
+				attachPt = inst.GetComponentInParent<GrabAttachPoint>(true);
+				if (attachPt)
+				{
+					grabHand = attachPt.Grabber.Controller.Hand;
+					handMatches = inst.SupportsHand(grabHand);
+				}
 
 			if (grabbable == null)
 			{
 				EditorGUILayout.HelpBox("GrabAnchors are intended to be placed on GameObject children of a GameObject with a Grabbable component.", MessageType.Error);
 				EditorGUILayout.Space();
 			}
+
 
 			GUI.color = handMatches ? Color.white : new Color(1f, 0.8f, 0.8f, 1f);
 			PropertyField("_primaryHand");
@@ -86,7 +87,7 @@ namespace HandsOnVR.Editor
 				EditorTools.BeginInfoBox();
 				GUI.enabled = false;
 
-				var grabbedBy = (inst.Parent) ? (inst.Parent.GrabbedBy ?? inst.Parent.GrabbedBySecond) : null;
+				var grabbedBy = (inst.Grabbable) ? (inst.Grabbable.GrabbedBy ?? inst.Grabbable.GrabbedBySecond) : null;
 				if (grabbedBy && grabbedBy.GrabbedAnchor != (IGrabAnchor)inst) grabbedBy = null;
 
 				EditorGUILayout.ObjectField("Grabbed By", grabbedBy, typeof(Grabber), true);
