@@ -9,27 +9,26 @@ namespace HandsOnVR.Editor
 	public class GrabAnchorEditor : EditorBase<GrabAnchor>
 	{
 
-		protected override void CustomInspector(GrabAnchor inst)
+		override protected void CustomInspector(GrabAnchor inst)
 		{
 			Grabbable grabbable = null;
 			GrabAttachPoint attachPt = null;
 			Hand grabHand = (Hand)0;
 			bool handMatches = true;
 
-				grabbable = inst.GetComponentInParent<Grabbable>(true);
-				attachPt = inst.GetComponentInParent<GrabAttachPoint>(true);
-				if (attachPt)
-				{
-					grabHand = attachPt.Grabber.Controller.Hand;
-					handMatches = inst.SupportsHand(grabHand);
-				}
+			grabbable = inst.GetComponentInParent<Grabbable>(true);
+			attachPt = inst.GetComponentInParent<GrabAttachPoint>(true);
+			if (attachPt)
+			{
+				grabHand = attachPt.Grabber.Controller.Hand;
+				handMatches = inst.SupportsHand(grabHand);
+			}
 
 			if (grabbable == null)
 			{
 				EditorGUILayout.HelpBox("GrabAnchors are intended to be placed on GameObject children of a GameObject with a Grabbable component.", MessageType.Error);
 				EditorGUILayout.Space();
 			}
-
 
 			GUI.color = handMatches ? Color.white : new Color(1f, 0.8f, 0.8f, 1f);
 			PropertyField("_primaryHand");

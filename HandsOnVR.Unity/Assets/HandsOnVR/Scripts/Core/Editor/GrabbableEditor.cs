@@ -8,7 +8,7 @@ namespace HandsOnVR.Editor
 	[CustomEditor(typeof(Grabbable))]
 	public class GrabbableEditor : EditorBase<Grabbable>
 	{
-		protected override void CustomInspector(Grabbable inst)
+		override protected void CustomInspector(Grabbable inst)
 		{
 			DrawDefaultInspector();
 

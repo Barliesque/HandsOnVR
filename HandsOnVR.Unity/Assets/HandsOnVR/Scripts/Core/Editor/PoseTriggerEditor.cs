@@ -8,7 +8,7 @@ namespace HandsOnVR.Editor
     [CustomEditor(typeof(PoseTrigger))]
     public class PoseTriggerEditor : EditorBase<PoseTrigger>
     {
-        protected override void CustomInspector(PoseTrigger inst)
+        override protected void CustomInspector(PoseTrigger inst)
         {
             PropertyField("_proximityPose");
 
