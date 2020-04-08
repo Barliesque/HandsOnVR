@@ -16,8 +16,6 @@ namespace HandsOnVR.Editor
 			Hand grabHand = (Hand)0;
 			bool handMatches = true;
 
-			if (!Application.isPlaying)
-			{
 				grabbable = inst.GetComponentInParent<Grabbable>(true);
 				attachPt = inst.GetComponentInParent<GrabAttachPoint>(true);
 				if (attachPt)
@@ -25,7 +23,6 @@ namespace HandsOnVR.Editor
 					grabHand = attachPt.Grabber.Controller.Hand;
 					handMatches = inst.SupportsHand(grabHand);
 				}
-			}
 
 			if (grabbable == null)
 			{
