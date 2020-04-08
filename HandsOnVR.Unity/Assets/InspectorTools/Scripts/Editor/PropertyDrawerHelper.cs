@@ -197,6 +197,7 @@ namespace Barliesque.InspectorTools.Editor
 			_position.width = fieldWidth < 0f ? (_rect.width - _position.x) : fieldWidth;
 
 			var options = Enum.GetNames(typeof(T));
+			for (int i = 0; i < options.Length; i++) options[i] = options[i].SplitCamelCase();
 			var values = (int[]) Enum.GetValues(typeof(T));
 			var index = Array.IndexOf(values, prop.intValue);
 
