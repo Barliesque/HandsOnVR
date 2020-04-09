@@ -151,6 +151,7 @@ namespace Barliesque.InspectorTools.Editor
 
 		static public void HelpBox(string help, MessageType type = MessageType.None)
 		{
+			EditorStyles.helpBox.richText = true;
 			EditorGUILayout.HelpBox(help, type);
 		}
 
