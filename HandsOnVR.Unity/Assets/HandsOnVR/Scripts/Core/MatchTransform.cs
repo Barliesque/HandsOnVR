@@ -16,14 +16,14 @@ namespace HandsOnVR
 		[Range(0,1)] public float Transition;
 		public Transform SecondTarget;
 
-		Transform _xform;
+		private Transform _xform;
 
 		private void Start()
 		{
 			_xform = GetComponent<Transform>();
 		}
 
-		void Update()
+		private void Update()
 		{
 			if (Target == null)
 			{

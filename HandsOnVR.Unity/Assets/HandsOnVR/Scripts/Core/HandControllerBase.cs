@@ -2,7 +2,7 @@
 
 namespace HandsOnVR
 {
-	public abstract class HandControllerBase : MonoBehaviour
+	abstract public class HandControllerBase : MonoBehaviour
 	{
 		abstract public bool IsConnected { get; }
 		abstract public ButtonState AorX { get; protected set; }

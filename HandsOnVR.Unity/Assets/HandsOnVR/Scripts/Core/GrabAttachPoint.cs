@@ -4,11 +4,11 @@ namespace HandsOnVR
 {
 	public class GrabAttachPoint : MonoBehaviour
 	{
-		[SerializeField] Grabber _grabber;
+		[SerializeField] private Grabber _grabber;
 		public Grabber Grabber => _grabber;
-		[SerializeField] bool _visualize = false;
+		[SerializeField] private bool _visualize = false;
 
-		Transform _xform;
+		private Transform _xform;
 		public Vector3 Position => _xform.position;
 		public Quaternion Rotation => _xform.rotation;
 		public Vector3 EulerAngles => _xform.eulerAngles;

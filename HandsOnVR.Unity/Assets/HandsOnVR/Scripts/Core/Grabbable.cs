@@ -13,10 +13,10 @@ namespace HandsOnVR
 	{
 
 		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While this object is being grabbed, the specified parameter will be set to true.")]
-		[SerializeField] string _grabPose;
+		[SerializeField] private string _grabPose;
 		public string GrabPose => _grabPose;
 
-		int _grabPoseID;
+		private int _grabPoseID;
 		public int GrabPoseID
 		{
 			get {
@@ -35,10 +35,10 @@ namespace HandsOnVR
 
 
 		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While the player's hand is near this object, the specified parameter will be set to true.")]
-		[SerializeField] string _proximityPose;
+		[SerializeField] private string _proximityPose;
 		public string ProximityPose => _proximityPose;
 
-		int _proximityPoseID;
+		private int _proximityPoseID;
 		public int ProximityPoseID
 		{
 			get => _proximityPoseID;
@@ -46,7 +46,7 @@ namespace HandsOnVR
 		}
 
 
-		[SerializeField] bool _orientToHand = true;
+		[SerializeField] private bool _orientToHand = true;
 		public bool OrientToHand
 		{
 			get {
@@ -66,7 +66,7 @@ namespace HandsOnVR
 		{
 			NoSecondGrab, TransferToSecondGrab, AllowBothHands  //, RequireBothHands
 		}
-		[SerializeField] SecondGrabBehavior _secondGrabBehavior = SecondGrabBehavior.TransferToSecondGrab;
+		[SerializeField] private SecondGrabBehavior _secondGrabBehavior = SecondGrabBehavior.TransferToSecondGrab;
 		public SecondGrabBehavior SecondGrab { get { return _secondGrabBehavior; } }
 
 
@@ -102,12 +102,12 @@ namespace HandsOnVR
 
 		public Rigidbody Body { get; private set; }
 
-		public bool HasExternalForce = false;
+		public bool HasExternalForce { get; set; }
 
 
-		Transform _xform;
-		IGrabAnchor[] _grabAnchors;
-		int _currentAnchor = -1;
+		private Transform _xform;
+		private IGrabAnchor[] _grabAnchors;
+		private int _currentAnchor = -1;
 
 		// Maximum distance the hand may be from a hand anchor for that anchor to be grabbable
 		public float MaxAnchorDistance => 0.25f;
@@ -124,7 +124,7 @@ namespace HandsOnVR
 		Grabbable IGrabAnchor.Grabbable => this;
 
 
-		virtual protected void Start()
+		private void Awake()
 		{
 			GrabPoseID = Animator.StringToHash(_grabPose);
 			ProximityPoseID = Animator.StringToHash(_proximityPose);
@@ -135,7 +135,7 @@ namespace HandsOnVR
 		}
 
 
-		bool CanBeGrabbed(Grabber grabbedBy)
+		private bool CanBeGrabbed(Grabber grabbedBy)
 		{
 			if (GrabbedBy)
 			{
@@ -282,7 +282,7 @@ namespace HandsOnVR
 		/// <param name="a"></param>
 		/// <param name="b"></param>
 		/// <returns></returns>
-		float OrientationScore(Quaternion a, Quaternion b)
+		private float OrientationScore(Quaternion a, Quaternion b)
 		{
 			// Find the angular delta, and convert from Quaternion to Angle/Axis
 			var angDelta = a * Quaternion.Inverse(b);
@@ -293,8 +293,13 @@ namespace HandsOnVR
 			return 1f - Mathf.Abs(angle / 180f);
 		}
 
+		public void Release()
+		{
+			if (GrabbedBySecond) Release(GrabbedBySecond);
+			if (GrabbedBy) Release(GrabbedBy);
+		}
 
-		internal virtual void Release(Grabber fromGrabber)
+		public void Release(Grabber fromGrabber)
 		{
 			if (GrabbedBySecond == fromGrabber)
 			{

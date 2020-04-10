@@ -12,10 +12,10 @@ namespace HandsOnVR
     {
 
 		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While the player's hand is near this object, the specified parameter will be set to true.")]
-		[SerializeField] string _proximityPose;
+		[SerializeField] private string _proximityPose;
 		public string ProximityPose => _proximityPose;
 
-		int _proximityPoseID;
+		private int _proximityPoseID;
 		public int ProximityPoseID
 		{
 			get => _proximityPoseID;
@@ -23,10 +23,10 @@ namespace HandsOnVR
 		}
 
 		[Tooltip("Should the right hand respond to this PoseTrigger?")]
-		[SerializeField] bool _rightHand = true;
+		[SerializeField] private bool _rightHand = true;
 
 		[Tooltip("Should the left hand respond to this PoseTrigger?")]
-		[SerializeField] bool _leftHand = true;
+		[SerializeField] private bool _leftHand = true;
 
 		public Collider Collider { get; private set; }
 

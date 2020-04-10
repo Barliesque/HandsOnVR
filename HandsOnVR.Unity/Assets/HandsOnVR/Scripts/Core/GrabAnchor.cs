@@ -19,14 +19,14 @@ namespace HandsOnVR
 			SecondOnly = 2
 		}
 
-		Vector3 _offsetLeft;
-		Quaternion _orientLeft;
-		Vector3 _offsetRight;
-		Quaternion _orientRight;
+		private Vector3 _offsetLeft;
+		private Quaternion _orientLeft;
+		private Vector3 _offsetRight;
+		private Quaternion _orientRight;
 
 
 		[Tooltip("Which hand was this GrabAnchor placed for?")]
-		[SerializeField, EnumPopup] Hand _primaryHand = Hand.Right;
+		[SerializeField, EnumPopup] private Hand _primaryHand = Hand.Right;
 		public bool SupportsHand(Hand hand)
 		{
 			return _mirrorForOtherHand || (_primaryHand == hand);
@@ -38,6 +38,7 @@ namespace HandsOnVR
 
 		[Tooltip("Formula to be used to mirror this anchor for use by the other hand.  (Experimental)")]
 		[SerializeField, EnumFlags] private MirrorAction _mirrorActions;
+		
 		[Flags]
 		public enum MirrorAction
 		{
@@ -50,11 +51,11 @@ namespace HandsOnVR
 		}
 
 		[Tooltip("Restrict whether this anchor may be grabbed first, or second?")]
-		[SerializeField] Order _grabOrder = Order.FirstOrSecond;
+		[SerializeField] private Order _grabOrder = Order.FirstOrSecond;
 		public Order GrabOrder { get { return _grabOrder; } }
 
 		[Tooltip("Should this GrabAnchor use a different Grab Pose than specified by the Grabbable component?")]
-		[SerializeField, FormerlySerializedAs("_overridePose")] bool _overrideGrabPose;
+		[SerializeField] private bool _overrideGrabPose;
 		public bool OverrideGrabPose { get { return _overrideGrabPose; } }
 
 		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While this object is being grabbed, the specified parameter will be set to true.")]
@@ -62,28 +63,28 @@ namespace HandsOnVR
 		public int GrabPoseID { get; private set; }
 
 		[Tooltip("Should this GrabAnchor use a different Proximity Pose than specified by the Grabbable component?")]
-		[SerializeField] bool _overrideProximityPose;
+		[SerializeField] private bool _overrideProximityPose;
 		public bool OverrideProximityPose { get { return _overrideProximityPose; } }
 
 		[Tooltip("A bool parameter name found in the Animator components of the player's hands.  While the player's hand is near this object, the specified parameter will be set to true.")]
-		[SerializeField] string _proximityPose;
+		[SerializeField] private string _proximityPose;
 		public int ProximityPoseID { get; private set; }
 
 
 		[Tooltip("Should this GrabAnchor have a different OrientToHand setting than specified by the Grabbable component?")]
-		[SerializeField] bool _overrideOrientToHand;
+		[SerializeField] private bool _overrideOrientToHand;
 		public bool OverrideOrientToHand { get { return _overrideOrientToHand; } }
 
 		[Tooltip("Should this object be reoriented to meet the hand's orientation?")]
-		[SerializeField] bool _orientToHand = true;
+		[SerializeField] private bool _orientToHand = true;
 		public bool OrientToHand { get { return _orientToHand; } }
 
 
-		Transform _xform;
-		Transform _grabbableXform;
+		private Transform _xform;
+		private Transform _grabbableXform;
 
 		public Grabbable Grabbable => _grabbable;
-		Grabbable _grabbable;
+		private Grabbable _grabbable;
 
 
 		public Vector3 GetPosition(HandsOnVR.Hand hand)
@@ -126,7 +127,7 @@ namespace HandsOnVR
 		}
 
 
-		[SerializeField] bool _liveUpdate;  //TODO  Show this property at runtime?  ...or, better, simply call Awake via Message whenever the Method changes!
+		[SerializeField] private bool _liveUpdate;  //TODO  Show this property at runtime?  ...or, better, simply call Awake via Message whenever the Method changes!
 #if UNITY_EDITOR
 		private void Update()
 		{

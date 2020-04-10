@@ -11,18 +11,18 @@ namespace HandsOnVR
 	public class SolidHandMover : MonoBehaviour
 	{
 
-		[SerializeField] HandControllerBase _controller;
+		[SerializeField] private HandControllerBase _controller;
 		
 		public bool MatchPosition = true;
 		public bool MatchRotation = true;
 
 		public IGrabAnchor Anchor;
-		[SerializeField] GrabAttachPoint _attachPoint;
+		[SerializeField] private GrabAttachPoint _attachPoint;
 
 		private Transform _xform;
-		Vector3 _targetPos;
-		Quaternion _targetRot;
-		float _transition;
+		private Vector3 _targetPos;
+		private Quaternion _targetRot;
+		private float _transition;
 
 		private void Start()
 		{
@@ -30,7 +30,7 @@ namespace HandsOnVR
 		}
 
 
-		void FixedUpdate()
+		private void FixedUpdate()
 		{
 			if (_controller == null) return;
 

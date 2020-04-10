@@ -8,29 +8,29 @@ namespace HandsOnVR
 	/// </summary>
 	public class GrabAttacher : MonoBehaviour
 	{
-		[SerializeField] Rigidbody _grabbedBody;
+		[SerializeField] private Rigidbody _grabbedBody;
 		public Rigidbody GrabbedBody => _grabbedBody;
 
-		[SerializeField] IGrabAnchor _grabbedAnchor;
+		[SerializeField] private IGrabAnchor _grabbedAnchor;
 		public IGrabAnchor GrabbedAnchor => _grabbedAnchor;
 
-		[SerializeField] Transform _target;
+		[SerializeField] private Transform _target;
 		public Transform Target => _target;
 
-		[SerializeField] IGrabAnchor _secondAnchor;
+		[SerializeField] private IGrabAnchor _secondAnchor;
 		public IGrabAnchor SecondAnchor => _secondAnchor;
 
-		[SerializeField] Transform _secondTarget;
+		[SerializeField] private Transform _secondTarget;
 		public Transform SecondTarget => _secondTarget;
 
-		[SerializeField] Rigidbody _handBody;
+		[SerializeField] private Rigidbody _handBody;
 
 		[HideInInspector] public bool LimitEngagement;
 
-		float _engaged = 1f;
-		Hand _firstGrabbedBy;
-		const float _moveSpeed = 60f;
-		const float _turnSpeed = 0.9f;
+		private float _engaged = 1f;
+		private Hand _firstGrabbedBy;
+		private const float _moveSpeed = 60f;
+		private const float _turnSpeed = 0.9f;
 
 
 		private void Start()
@@ -55,7 +55,7 @@ namespace HandsOnVR
 		}
 
 
-		void FixedUpdate()
+		private void FixedUpdate()
 		{
 			if (_grabbedBody && _handBody)
 			{

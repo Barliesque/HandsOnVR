@@ -11,16 +11,16 @@ namespace HandsOnVR
 	[RequireComponent(typeof(GrabAttacher), typeof(CapsuleCollider))]
 	public class Grabber : MonoBehaviour
 	{
-		[SerializeField] HandControllerBase _controller;
+		[SerializeField] private HandControllerBase _controller;
 		public HandControllerBase Controller { get { return _controller; } }
 
-		[SerializeField] Transform _focusPoint;
-		[SerializeField] Animator _handSolid;
-		[SerializeField] Animator _handGhost;
-		[SerializeField] SolidHandMover _solidHandMover;
-		[SerializeField] GameObject _handColliders;
-		[SerializeField] Grabber _otherHand;
-		[SerializeField] LayerMask _grabbableLayers = 0x7FFFFFFF;
+		[SerializeField] private Transform _focusPoint;
+		[SerializeField] private Animator _handSolid;
+		[SerializeField] private Animator _handGhost;
+		[SerializeField] private SolidHandMover _solidHandMover;
+		[SerializeField] private GameObject _handColliders;
+		[SerializeField] private Grabber _otherHand;
+		[SerializeField] private LayerMask _grabbableLayers = 0x7FFFFFFF;
 
 		public Animator HandSolid => _handSolid;
 		public Animator HandGhost => _handGhost;
@@ -34,21 +34,21 @@ namespace HandsOnVR
 		public bool IsGrabbing => _grabbed;
 
 		/// <summary>Colliders currently intersecting the trigger volume, and the Grabbable to which they belong</summary>
-		Dictionary<Collider, Grabbable> _grabbables = new Dictionary<Collider, Grabbable>();
+		private Dictionary<Collider, Grabbable> _grabbables = new Dictionary<Collider, Grabbable>();
 
 		/// <summary>Grabbables currently intersecting the trigger volume</summary>
-		List<GrabbableStats> _canGrab = new List<GrabbableStats>();
+		private List<GrabbableStats> _canGrab = new List<GrabbableStats>();
 
-		Grabbable _grabbed;
-		RaycastHit[] _hits = new RaycastHit[64];
-		GrabAttacher _attacher;
-		CapsuleCollider _triggerVolume;
+		private Grabbable _grabbed;
+		private RaycastHit[] _hits = new RaycastHit[64];
+		private GrabAttacher _attacher;
+		private CapsuleCollider _triggerVolume;
 
-		PoseTrigger _poseTrigger;
-		int _proximityPoseID;
+		private PoseTrigger _poseTrigger;
+		private int _proximityPoseID;
 
 
-		struct GrabbableStats
+		private struct GrabbableStats
 		{
 			/// <summary>A Grabbable in range of this Grabber</summary>
 			public Grabbable grabbable;
@@ -220,7 +220,7 @@ namespace HandsOnVR
 		}
 
 
-		void SelectAnchorAndGrab()
+		private void SelectAnchorAndGrab()
 		{
 			if (_canGrab.Count > 1)
 			{
@@ -247,7 +247,7 @@ namespace HandsOnVR
 			}
 		}
 
-		void GrabByAnchor(IGrabAnchor anchor)
+		private void GrabByAnchor(IGrabAnchor anchor)
 		{
 			Grabbable grabbed = anchor.Grabbable;
 			_grabbed = grabbed;
@@ -274,17 +274,17 @@ namespace HandsOnVR
 			ClearProximityPose();
 		}
 
-		void SetGrab(Rigidbody grabbedBody, IGrabAnchor anchor)
+		private void SetGrab(Rigidbody grabbedBody, IGrabAnchor anchor)
 		{
 			_attacher.SetGrab(grabbedBody, anchor, _controller.Hand);
 		}
 
-		void SetSecondGrab(IGrabAnchor anchor, Transform target)
+		private void SetSecondGrab(IGrabAnchor anchor, Transform target)
 		{
 			_attacher.SetSecondGrab(anchor, target);
 		}
 
-		void EndGrab()
+		private void EndGrab()
 		{
 			SetHandPose(_grabbed.GrabPoseID, false);
 			if (_grabbed.GrabbedBySecond == this)
@@ -385,14 +385,14 @@ namespace HandsOnVR
 		}
 
 
-		void SetProximityPose(int poseID, PoseTrigger trigger = null)
+		private void SetProximityPose(int poseID, PoseTrigger trigger = null)
 		{
 			_proximityPoseID = poseID;
 			_poseTrigger = trigger;
 			SetHandPose(_proximityPoseID, true);
 		}
 
-		void ClearProximityPose()
+		private void ClearProximityPose()
 		{
 			SetHandPose(_proximityPoseID, false);
 			_proximityPoseID = 0;
