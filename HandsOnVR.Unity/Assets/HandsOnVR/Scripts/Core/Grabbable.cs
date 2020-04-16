@@ -130,7 +130,16 @@ namespace HandsOnVR
 			ProximityPoseID = Animator.StringToHash(_proximityPose);
 
 			Body = GetComponent<Rigidbody>();
-			_grabAnchors = GetComponentsInChildren<GrabAnchor>();
+			
+			_grabAnchors = GetComponentsInChildren<IGrabAnchor>();
+			// The Grabbable is only used as a GrabAnchor if no dedicated GrabAnchors have been created
+			if (_grabAnchors.Length > 1)
+			{
+				// Remove the Grabbable itself from the list of GrabAnchors
+				var all = _grabAnchors;
+				_grabAnchors = new IGrabAnchor[all.Length - 1];
+				Array.Copy(all, 1, _grabAnchors, 0, _grabAnchors.Length);
+			}
 			_xform = GetComponent<Transform>();
 		}
 
