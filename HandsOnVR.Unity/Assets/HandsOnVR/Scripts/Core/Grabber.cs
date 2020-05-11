@@ -209,7 +209,7 @@ namespace HandsOnVR
 
 			if (_grabbed)
 			{
-				_attacher.LimitEngagement = _grabbed.HasExternalForce;
+				_attacher.DisableForce = _grabbed.HasExternalForce;
 			}
 
 			// After grab has been released, wait for hand to move away before reactivating colliders
@@ -298,8 +298,8 @@ namespace HandsOnVR
 				_grabbed.GrabbedBySecond.SetGrab(_grabbed.Body, _attacher.SecondAnchor);
 			}
 			var grabbed = _grabbed;
-			_grabbed.Release(this);
 			_grabbed = null;
+			grabbed.Release(this);
 			SetGrab(null, null);
 			SetSecondGrab(null, null);
 			_solidHandMover.Anchor = null;

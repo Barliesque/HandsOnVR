@@ -73,12 +73,17 @@ namespace HandsOnVR
 		public Grabber GrabbedBy { get; private set; }
 		public Grabber GrabbedBySecond { get; private set; }
 
+		/// <summary>
+		/// If called from a listener of Grabbable.OnGrabbed, then the grab action will be cancelled.
+		/// </summary>
+		public void CancelGrab() => _grabCancelled = true;
+		private bool _grabCancelled;
 
 		/// <summary>
 		/// At the moment this object is grabbed, this event is fired.  If false is returned, the grab will be rejected.
 		/// </summary>
 		public event GrabHandler OnGrabbed;
-		public delegate bool GrabHandler(Grabbable grabbed, Grabber grabbedBy);
+		public delegate void GrabHandler(Grabbable grabbed, Grabber grabbedBy); //TODO  Instead of expecting a returned bool, create a flag called "BlockGrab"
 
 		/// <summary>
 		/// At the moment this object is released, this event is fired.
@@ -129,6 +134,7 @@ namespace HandsOnVR
 			GrabPoseID = Animator.StringToHash(_grabPose);
 			ProximityPoseID = Animator.StringToHash(_proximityPose);
 
+			_xform = GetComponent<Transform>();
 			Body = GetComponent<Rigidbody>();
 			
 			_grabAnchors = GetComponentsInChildren<IGrabAnchor>();
@@ -140,11 +146,10 @@ namespace HandsOnVR
 				_grabAnchors = new IGrabAnchor[all.Length - 1];
 				Array.Copy(all, 1, _grabAnchors, 0, _grabAnchors.Length);
 			}
-			_xform = GetComponent<Transform>();
 		}
 
 
-		private bool CanBeGrabbed(Grabber grabbedBy)
+		private void InitiateGrab(Grabber grabbedBy)
 		{
 			if (GrabbedBy)
 			{
@@ -152,7 +157,8 @@ namespace HandsOnVR
 				if (_secondGrabBehavior == SecondGrabBehavior.NoSecondGrab)
 				{
 					// ...Reject second grab.
-					return false;
+					_grabCancelled = true;
+					return;
 				}
 				if (_secondGrabBehavior == SecondGrabBehavior.TransferToSecondGrab)
 				{
@@ -161,8 +167,9 @@ namespace HandsOnVR
 				}
 			}
 
-			bool allowed = OnGrabbed?.Invoke(this, grabbedBy) ?? true;
-			if (allowed)
+			_grabCancelled = false;
+			OnGrabbed?.Invoke(this, grabbedBy);
+			if (!_grabCancelled)
 			{
 				// Is this the first hand grabbing this object?
 				if (GrabbedBy == null)
@@ -178,8 +185,6 @@ namespace HandsOnVR
 			{
 				Debug.Log($"{name}: Grab blocked by OnGrabbed callback");
 			}
-
-			return allowed;
 		}
 
 
@@ -192,7 +197,8 @@ namespace HandsOnVR
 		[Obsolete("For internal use only.  Use Grabber.Grab() instead.")]
 		internal bool TryGrab(Grabber grabbedBy, out IGrabAnchor anchor)
 		{
-			if (CanBeGrabbed(grabbedBy))
+			InitiateGrab(grabbedBy);
+			if (!_grabCancelled)
 			{
 				// By what anchor will it be grabbed?
 				if (_grabAnchors.Length == 0)
@@ -310,6 +316,12 @@ namespace HandsOnVR
 
 		public void Release(Grabber fromGrabber)
 		{
+			if (fromGrabber.IsGrabbing)
+			{
+				// Release was called by something other than the Grabber
+				fromGrabber.Release();
+				return;
+			}
 			if (GrabbedBySecond == fromGrabber)
 			{
 				// Second hand released only
@@ -358,56 +370,54 @@ namespace HandsOnVR
 			grabbedAnchor = anchor;
 			bool anchorIsThis = (anchor == (IGrabAnchor)this);
 
-			if (CanBeGrabbed(grabbedBy))
+			InitiateGrab(grabbedBy);
+			if (_grabCancelled) return false;
+			
+			int index = int.MaxValue;
+			if (anchorIsThis)
 			{
-				int index = int.MaxValue;
-
-				if (anchorIsThis)
+				// Only a Grabbable with no anchors can be used as a IGrabAnchor
+				if (!_grabAnchors.IsNullOrEmpty())
 				{
-					// Only a Grabbable with no anchors can be used as a IGrabAnchor
-					if (!_grabAnchors.IsNullOrEmpty())
+					index = FindClosestAnchor(grabbedBy, GrabbedBy == this ? null : GrabbedBy.GrabbedAnchor);
+					if (index >= 0)
 					{
-						index = FindClosestAnchor(grabbedBy, GrabbedBy == this ? null : GrabbedBy.GrabbedAnchor);
-						if (index >= 0)
-						{
-							grabbedAnchor = _grabAnchors[index];
-						} else
-						{
-							Debug.Log($"None of {anchor}'s anchors could be grabbed.");
-						}
+						grabbedAnchor = _grabAnchors[index];
+					} else
+					{
+						Debug.Log($"None of {anchor}'s anchors could be grabbed.");
 					}
+				}
+			}
+			else
+			{
+				// Get index of specified anchor
+				for (index = _grabAnchors.Length - 1; index >= 0; index--)
+				{
+					if (_grabAnchors[index] == anchor) break;
+				}
+				if (index < 0)
+				{
+					// Anchor not found!
+					Debug.LogError($"GrabAnchor ({anchor.Grabbable.name}) specified does not belong to this Grabbable ({name})");
+				}
+			}
+
+			if (index < 0)
+			{
+				// Unsuccessful grab
+				if (GrabbedBySecond == grabbedBy)
+				{
+					GrabbedBySecond = null;
 				}
 				else
 				{
-					// Get index of specified anchor
-					for (index = _grabAnchors.Length - 1; index >= 0; index--)
-					{
-						if (_grabAnchors[index] == anchor) break;
-					}
-					if (index < 0)
-					{
-						// Anchor not found!
-						Debug.LogError($"GrabAnchor ({anchor.Grabbable.name}) specified does not belong to this Grabbable ({name})");
-					}
+					GrabbedBy = null;
 				}
-
-				if (index < 0)
-				{
-					// Unsuccessful grab
-					if (GrabbedBySecond == grabbedBy)
-					{
-						GrabbedBySecond = null;
-					}
-					else
-					{
-						GrabbedBy = null;
-					}
-					return false;
-				}
-
-				return true;
+				return false;
 			}
-			return false;
+
+			return true;
 		}
 
 	}
