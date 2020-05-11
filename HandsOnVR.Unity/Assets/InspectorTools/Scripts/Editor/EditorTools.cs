@@ -171,7 +171,7 @@ namespace Barliesque.InspectorTools.Editor
 		static public void Separator()
 		{
 			EditorGUILayout.Space();
-			GUILayout.Box(new GUIContent(), GUILayout.ExpandWidth(true), GUILayout.Height(3f));
+			GUILayout.Box(new GUIContent(), GUILayout.ExpandWidth(true), GUILayout.Height(1f));
 			EditorGUILayout.Space();
 		}
 
@@ -739,7 +739,6 @@ namespace Barliesque.InspectorTools.Editor
 			GUI.enabled = wasEnabled;
 			return changed;
 		}
-
 
 	}
 }

@@ -35,8 +35,8 @@ namespace HandsOnVR
 		[Tooltip("Upper limit of rotation about the axis of movement.")]
 		public float RotationLimitHigh;
 
-		ConfigurableJoint _joint;
-		Transform _connectedXform;
+		private ConfigurableJoint _joint;
+		private Transform _connectedXform;
 
 
 		private void Start()
@@ -46,9 +46,9 @@ namespace HandsOnVR
 			{
 				throw new Exception("SliderJoint requires a Rigidbody");
 			}
-
 			_joint = Body.gameObject.AddComponent<ConfigurableJoint>();
-			UpdateJoint();
+			
+			if (ConnectedBody) UpdateJoint();
 		}
 
 		public void UpdateJoint()
@@ -74,14 +74,14 @@ namespace HandsOnVR
 
 			var axis = (HasAxis(Axis.X) ? Vector3.right : (HasAxis(Axis.Y) ? Vector3.up : Vector3.forward)) * sign;
 			_joint.axis = Vector3.right;
-			_joint.anchor = AnchorPosition - (axis * Limit * 0.5f);
+			_joint.anchor = AnchorPosition - axis * (Limit * 0.5f);
 
 			if (!Body) Body = GetComponentInParent<Rigidbody>();
 			Body.constraints = RigidbodyConstraints.None;
 		}
 
 
-		bool HasAxis(Axis axis)
+		private bool HasAxis(Axis axis)
 		{
 			return (AxisOfMovement & axis) == axis;
 		}
@@ -90,7 +90,7 @@ namespace HandsOnVR
 			get => _connectedXform; 
 			set {
 				_connectedXform = value;
-				ConnectedBody = value?.GetComponent<Rigidbody>() ?? null;
+				ConnectedBody = value ? value.GetComponent<Rigidbody>() : null;
 				UpdateJoint();
 			} 
 		}

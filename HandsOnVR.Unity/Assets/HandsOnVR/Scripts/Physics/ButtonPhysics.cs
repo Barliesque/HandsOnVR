@@ -8,10 +8,10 @@ namespace HandsOnVR
 	[RequireComponent(typeof(Rigidbody))]
 	public class ButtonPhysics : MonoBehaviour
 	{
-		[SerializeField, EnumPopup] Axis _axisOfMovement = Axis.Y;
-		[SerializeField] float _upPosition;
-		[SerializeField] float _downPosition;
-		[SerializeField, Range(0f, 1f)] float _springiness = 0.25f;
+		[SerializeField, EnumPopup] private Axis _axisOfMovement = Axis.Y;
+		[SerializeField] private float _upPosition;
+		[SerializeField] private float _downPosition;
+		[SerializeField, Range(0f, 1f)] private float _springiness = 0.25f;
 		public UnityEvent OnButtonPressed;
 		public UnityEvent OnButtonReleased;
 
@@ -19,10 +19,10 @@ namespace HandsOnVR
 		public bool IsUp { get; private set; }
 
 
-		Transform _xform;
-		Rigidbody _body;
-		Vector3 _motorDirection;
-		bool _wasPressed;
+		private Transform _xform;
+		private Rigidbody _body;
+		private Vector3 _motorDirection;
+		private bool _wasPressed;
 
 		private void Awake()
 		{
@@ -31,7 +31,7 @@ namespace HandsOnVR
 		}
 
 
-		void AxisSetup()
+		private void AxisSetup()
 		{
 			_body = GetComponent<Rigidbody>();
 			_body.constraints = RigidbodyConstraints.FreezeRotation |
@@ -95,7 +95,7 @@ namespace HandsOnVR
 			OnButtonReleased?.Invoke();
 		}
 
-		Vector3 SetAxis(Vector3 position, Axis axis, float value)
+		private Vector3 SetAxis(Vector3 position, Axis axis, float value)
 		{
 			if (axis == Axis.X) position.x = value;
 			else if (axis == Axis.Y) position.y = value;
@@ -103,7 +103,7 @@ namespace HandsOnVR
 			return position;
 		}
 
-		float GetAxis(Vector3 position, Axis axis)
+		private float GetAxis(Vector3 position, Axis axis)
 		{
 			if (axis == Axis.X) return position.x;
 			else if (axis == Axis.Y) return position.y;

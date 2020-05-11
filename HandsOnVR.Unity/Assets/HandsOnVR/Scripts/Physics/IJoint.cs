@@ -4,7 +4,7 @@ namespace HandsOnVR
 {
 
 	/// <summary>
-	/// An interface allowing joints to be paired with the PropAttacher component.
+	/// An interface allowing custom joints to be abstracted.
 	/// </summary>
 	public interface IJoint
 	{

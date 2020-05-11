@@ -24,11 +24,11 @@ namespace HandsOnVR
 		[Tooltip("When the target is further than this distance, the Rigidbody's position will be matched immediately.")]
 		public float TeleportThreshold = 0.25f;
 
-		Transform _xform;
-		Rigidbody _body;
+		private Transform _xform;
+		private Rigidbody _body;
 
 
-		void Start()
+		private void Start()
 		{
 			_body = GetComponent<Rigidbody>();
 			_body.isKinematic = false;
@@ -37,7 +37,7 @@ namespace HandsOnVR
 
 
 #if UNITY_EDITOR
-		void Update()
+		private void Update()
 		{
 			// While the application is not playing...
 			if (!Application.isPlaying)
@@ -88,7 +88,7 @@ namespace HandsOnVR
 		}
 
 
-		void FixedUpdate()
+		private void FixedUpdate()
 		{
 			if (_connectedTo)
 			{

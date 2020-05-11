@@ -21,5 +21,7 @@ namespace HandsOnVR
 		public float Range => High - Low;
 		public float Lerp(float t) => Mathf.Lerp(Low, High, t);
 		public float InverseLerp(float value) => Mathf.InverseLerp(Low, High, value);
+
+		override public string ToString() => $"[LinearLimits: Low={Low} High={High}]";
 	}
 }

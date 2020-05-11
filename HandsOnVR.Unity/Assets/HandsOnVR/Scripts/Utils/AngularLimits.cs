@@ -90,9 +90,11 @@ namespace HandsOnVR
 		}
 
 		/// <summary>
-		/// Fix an angle to be within the range -180 to 180
+		/// Wrap an angle to the range -180 to 180
 		/// </summary>
 		static public float FixAngle(float value) => Mathf.Repeat(value + 180f, 360f) - 180f;
 
+		override public string ToString() => $"[AngularLimits: Start={Start}° End={End}° CCW={CCW}]";
+		
 	}
 }
