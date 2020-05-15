@@ -15,7 +15,7 @@ namespace HandsOnVR
 	/// </summary>
 	public class HandController : HandControllerBase
 	{
-		[SerializeField, EnumPopup] private Hand _hand;
+		[SerializeField, SingleSelection] private Hand _hand;
 		override public Hand Hand { get { return _hand; } }
 
 		// Note: Open an Inspector panel in debug mode to monitor these ButtonState values at runtime

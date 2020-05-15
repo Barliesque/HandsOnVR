@@ -26,7 +26,7 @@ namespace HandsOnVR
 
 
 		[Tooltip("Which hand was this GrabAnchor placed for?")]
-		[SerializeField, EnumPopup] private Hand _primaryHand = Hand.Right;
+		[SerializeField, SingleSelection] private Hand _primaryHand = Hand.Right;
 		public bool SupportsHand(Hand hand)
 		{
 			return _mirrorForOtherHand || (_primaryHand == hand);
@@ -200,17 +200,11 @@ namespace HandsOnVR
 			}
 		}
 
-
 		private void DrawAxes(Hand hand, float alpha)
 		{
 			var pos = GetPosition(hand);
 			var rot = GetRotation(hand);
-			Gizmos.color = new Color(1, 0, 0, alpha);
-			Gizmos.DrawLine(pos, pos + (rot * Vector3.right) * 0.05f);
-			Gizmos.color = new Color(0, 0, 1, alpha);
-			Gizmos.DrawLine(pos, pos + (rot * Vector3.forward) * 0.05f);
-			Gizmos.color = new Color(0, 1, 0, alpha);
-			Gizmos.DrawLine(pos, pos + (rot * Vector3.up) * 0.05f);
+			GizmoTools.DrawAxes(pos, rot, alpha);
 		}
 #endif
 

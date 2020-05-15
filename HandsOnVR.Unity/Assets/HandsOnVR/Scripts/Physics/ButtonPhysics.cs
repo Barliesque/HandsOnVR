@@ -8,7 +8,7 @@ namespace HandsOnVR
 	[RequireComponent(typeof(Rigidbody))]
 	public class ButtonPhysics : MonoBehaviour
 	{
-		[SerializeField, EnumPopup] private Axis _axisOfMovement = Axis.Y;
+		[SerializeField, SingleSelection] private Axis _axisOfMovement = Axis.Y;
 		[SerializeField] private float _upPosition;
 		[SerializeField] private float _downPosition;
 		[SerializeField, Range(0f, 1f)] private float _springiness = 0.25f;

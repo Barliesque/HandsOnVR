@@ -18,7 +18,7 @@ namespace HandsOnVR
 		public Rigidbody ConnectedBody;
 
 		[Tooltip("The axis in local space along which this joint allows movement.")]
-		[EnumPopup] public Axis AxisOfMovement = Axis.X;
+		[SingleSelection] public Axis AxisOfMovement = Axis.X;
 
 		[Tooltip("The local position at which this body is connected to the other.")]
 		public Vector3 AnchorPosition;
