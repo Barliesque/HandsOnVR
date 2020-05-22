@@ -32,12 +32,12 @@ namespace Barliesque.InspectorTools
 
 		static private readonly Vector3[] _cubeSides =
 		{
-			Vector3.forward, Vector3.right, Vector3.up, Vector3.back, Vector3.left, Vector3.down
+			Vector3.right, Vector3.up, Vector3.forward, Vector3.left, Vector3.down, Vector3.back
 		};
 
 		static private readonly Color[] _axisColors =
 		{
-			Color.blue * 0.75f, Color.red * 0.75f, Color.green * 0.5f, Color.blue, Color.red, Color.green
+			Color.red * 0.75f, Color.green * 0.5f, Color.blue * 0.75f, Color.red, Color.green, Color.blue
 		};
 
 
@@ -45,20 +45,20 @@ namespace Barliesque.InspectorTools
 		{
 			Gizmos.color = new Color(1, 0, 0, alpha);
 			Gizmos.DrawLine(pos, pos + (rot * Vector3.right) * 0.05f);
-			Gizmos.color = new Color(0, 0, 1, alpha);
-			Gizmos.DrawLine(pos, pos + (rot * Vector3.forward) * 0.05f);
 			Gizmos.color = new Color(0, 1, 0, alpha);
 			Gizmos.DrawLine(pos, pos + (rot * Vector3.up) * 0.05f);
+			Gizmos.color = new Color(0, 0, 1, alpha);
+			Gizmos.DrawLine(pos, pos + (rot * Vector3.forward) * 0.05f);
 		}
 
 		static public void DrawAxes(Vector3 pos, Quaternion rot, float alphaX, float alphaY, float alphaZ)
 		{
 			Gizmos.color = new Color(1, 0, 0, alphaX);
 			Gizmos.DrawLine(pos, pos + (rot * Vector3.right) * 0.05f);
-			Gizmos.color = new Color(0, 0, 1, alphaY);
-			Gizmos.DrawLine(pos, pos + (rot * Vector3.forward) * 0.05f);
-			Gizmos.color = new Color(0, 1, 0, alphaZ);
+			Gizmos.color = new Color(0, 1, 0, alphaY);
 			Gizmos.DrawLine(pos, pos + (rot * Vector3.up) * 0.05f);
+			Gizmos.color = new Color(0, 0, 1, alphaZ);
+			Gizmos.DrawLine(pos, pos + (rot * Vector3.forward) * 0.05f);
 		}
 
 
