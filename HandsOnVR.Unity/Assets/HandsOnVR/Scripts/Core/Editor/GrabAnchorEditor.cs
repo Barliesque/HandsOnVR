@@ -24,7 +24,7 @@ namespace HandsOnVR.Editor
 					handMatches = inst.SupportsHand(grabHand);
 				}
 
-			if (grabbable == null)
+			if (!grabbable)
 			{
 				EditorGUILayout.HelpBox("GrabAnchors are intended to be placed on GameObject children of a GameObject with a Grabbable component.", MessageType.Error);
 				EditorGUILayout.Space();
@@ -47,7 +47,7 @@ namespace HandsOnVR.Editor
 			if (PropertyField("_overrideGrabPose").boolValue)
 			{
 				PropertyField("_grabPose");
-			} else
+			} else if (grabbable)
 			{
 				GUI.enabled = false;
 				EditorGUILayout.TextField("Grab Pose", grabbable.GrabPose);

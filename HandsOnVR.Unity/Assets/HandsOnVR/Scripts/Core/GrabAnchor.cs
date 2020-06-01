@@ -193,6 +193,7 @@ namespace HandsOnVR
 		private void OnDrawGizmosSelected()
 		{
 			Awake();
+			if (!_grabbableXform) return;
 			DrawAxes(_primaryHand, 1f);
 			if (_mirrorForOtherHand)
 			{
