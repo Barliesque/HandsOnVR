@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Runtime.CompilerServices;
+using UnityEngine;
 
 namespace HandsOnVR
 {
@@ -8,5 +9,14 @@ namespace HandsOnVR
 		{
 			return axis == Axis.X ? vec3.x : (axis == Axis.Y ? vec3.y : vec3.z);
 		}
+
+		static public Vector3 SetAxis(this Vector3 vec3, Axis axis, float value)
+		{
+			if (axis == Axis.X) vec3.x = value;
+			else if (axis == Axis.Y) vec3.y = value;
+			else vec3.z = value;
+			return vec3;
+		}
+		
 	}
 }
