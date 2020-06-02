@@ -2,12 +2,34 @@
 using Barliesque.InspectorTools.Editor;
 using UnityEngine;
 
+
 namespace HandsOnVR.Editor
 {
 
 	[CustomEditor(typeof(GrabAnchor))]
 	public class GrabAnchorEditor : EditorBase<GrabAnchor>
 	{
+
+		static public void SetAnchorImmediate() => _setAnchorImmediate = true;
+		static private bool _setAnchorImmediate = false;
+		
+
+		static private readonly GUIContent _setAnchorButton = new GUIContent()
+		{
+			text = "Set Anchor Alignment",
+			tooltip = "Based on the Grabbable object's current position/rotation relative to the hand, set this anchor's Transform properties."
+		};
+		static private readonly GUIContent _alignGrabbableButton = new GUIContent()
+		{
+			text = "Align Grabbable to Anchor",
+			tooltip = "Reposition the Grabbable object such that it's aligned to the hand, as specified by this Grab Anchor."
+		};
+		static private readonly GUIContent _alignHandButton = new GUIContent()
+		{
+			text = "Align Hand to Anchor",
+			tooltip = "Reposition the Hand such that it's aligned to this Grab Anchor.  The Grabbable's world position/rotation will be preserved."
+		};
+		
 
 		override protected void CustomInspector(GrabAnchor inst)
 		{
@@ -106,17 +128,19 @@ namespace HandsOnVR.Editor
 					var parentXform = grabbableXform.parent;
 
 					GUI.color = handMatches ? Color.white : new Color(1f, 0.8f, 0.8f, 1f);
-					if (GUILayout.Button("Set Anchor Alignment"))
+					if (GUILayout.Button(_setAnchorButton) || _setAnchorImmediate)
 					{
 						Undo.RecordObject(anchorXform, "Set Anchor Alignment");
 						anchorXform.position = parentXform.position;
 						anchorXform.rotation = parentXform.rotation;
 						PropertyField("_primaryHand").intValue = (int)grabHand;
+						_setAnchorImmediate = false;
 					}
 					GUI.color = Color.white;
 
 					GUI.enabled = handMatches;
-					if (GUILayout.Button("Align Grabbable to Anchor"))
+
+					if (GUILayout.Button(_alignGrabbableButton))
 					{
 						Undo.RecordObject(grabbableXform, "Align Grabbable to Anchor");
 						// Align rotation
@@ -127,6 +151,33 @@ namespace HandsOnVR.Editor
 						// Align position
 						grabbableXform.localPosition = Vector3.zero;
 						grabbableXform.position -= anchorXform.position - grabbableXform.position;
+					}
+
+					if (GUILayout.Button(_alignHandButton))
+					{
+						var handXform = inst.GetComponentInParent<SolidHandMover>().transform.parent;
+						var attachPoint = inst.GetComponentInParent<GrabAttachPoint>().transform;
+						
+						// Save the grabbable's world pos/rot
+						var worldPos = grabbableXform.position;
+						var worldRot = grabbableXform.rotation;
+						
+						// Move the hand
+						Undo.RecordObjects(new Object[] { grabbableXform, handXform }, "Align Hand to Anchor");
+
+						var targetRot = anchorXform.rotation;
+						var targetPos = anchorXform.position;
+						
+						var rotOffset = handXform.InverseTransformRotation(attachPoint.rotation);
+						handXform.rotation = targetRot * Quaternion.Inverse(rotOffset);
+						
+						var posOffset = attachPoint.position - handXform.position;
+						handXform.position = targetPos - posOffset;
+						
+						// Restore the grabbable's world pos/rot
+						grabbableXform.position = worldPos;
+						grabbableXform.rotation = worldRot;
+						
 					}
 					GUI.enabled = true;
 

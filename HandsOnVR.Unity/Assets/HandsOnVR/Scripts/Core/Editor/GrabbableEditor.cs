@@ -38,7 +38,8 @@ namespace HandsOnVR.Editor
 					EditorGUILayout.Space();
 					if (GUILayout.Button("Create a new GrabAnchor"))
 					{
-						var container = inst.transform.Find("Grab Anchors");
+						var anyAnchor = inst.GetComponentInChildren<GrabAnchor>(true);
+						var container = anyAnchor ? anyAnchor.transform.parent : null;
 						if (container == null)
 						{
 							var go = new GameObject("Grab Anchors");
@@ -54,8 +55,9 @@ namespace HandsOnVR.Editor
 						var handProp = serial.FindProperty("_primaryHand");
 						handProp.intValue = (int)hand;
 						serial.ApplyModifiedProperties();
-						Selection.objects = new GameObject[] { anchorGo };
+						Selection.objects = new Object[] { anchorGo };
 						Undo.RegisterCreatedObjectUndo(anchorGo, "Created new Grab Anchor");
+						GrabAnchorEditor.SetAnchorImmediate();
 					}
 				}
 				else
