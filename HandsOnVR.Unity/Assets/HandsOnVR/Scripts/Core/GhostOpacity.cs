@@ -21,6 +21,7 @@ namespace HandsOnVR
 		private float _opacityMultiplier;
 		private readonly int _opacityParam = Shader.PropertyToID("_Opacity");
 
+		public float Stretch { get; private set; }
 
 		private void Start()
 		{
@@ -33,8 +34,8 @@ namespace HandsOnVR
 		private void Update()
 		{
 			var dist = (_xform.position - _handSolid.position).magnitude;
-			var t = Mathf.InverseLerp(_minDistance, _maxDistance, dist);
-			var alpha = _opacityMultiplier * t;
+			Stretch = Mathf.InverseLerp(_minDistance, _maxDistance, dist);
+			var alpha = _opacityMultiplier * Stretch;
 			_ghostMaterial.SetFloat(_opacityParam, alpha);
 			_renderer.enabled = (alpha > 0.0001f);
 		}
