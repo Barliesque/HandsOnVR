@@ -135,5 +135,21 @@ namespace HandsOnVR
 			}
 		}
 
+		public void SnapOrient(Axis twistAxis = Axis.X | Axis.Y | Axis.Z)
+		{
+			if (!_target || !_grabbedBody)
+			{
+				Debug.LogError("Cannot SnapOrient because the body has not been attached yet.");
+				return;
+			}
+			var target = _target.rotation.eulerAngles;
+			var rot = _grabbedBody.rotation.eulerAngles;
+			if ((twistAxis & Axis.X) != 0) rot.x = target.x;
+			if ((twistAxis & Axis.Y) != 0) rot.y = target.y;
+			if ((twistAxis & Axis.Z) != 0) rot.z = target.z;
+			_grabbedBody.MoveRotation(Quaternion.Euler(rot));
+			_grabbedBody.transform.eulerAngles = rot;
+		}
+		
 	}
 }
