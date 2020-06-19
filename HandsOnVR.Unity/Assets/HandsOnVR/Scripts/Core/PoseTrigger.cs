@@ -1,5 +1,4 @@
-﻿using Barliesque.InspectorTools;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 namespace HandsOnVR

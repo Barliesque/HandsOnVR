@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HandsOnVR.Editor
 {
 
-    [CustomEditor(typeof(PoseTrigger))]
+    [CustomEditor(typeof(PoseTrigger), true)]
     public class PoseTriggerEditor : EditorBase<PoseTrigger>
     {
         override protected void CustomInspector(PoseTrigger inst)
