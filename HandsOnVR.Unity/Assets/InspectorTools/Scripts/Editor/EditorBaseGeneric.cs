@@ -27,7 +27,8 @@ namespace Barliesque.InspectorTools.Editor
 
 		private void OnEnable()
 		{
-			OnEnabled(target as T);
+			var inst = target as T;
+			if (inst != null) OnEnabled(inst);
 		}
 
 		virtual protected void OnEnabled(T inst)
