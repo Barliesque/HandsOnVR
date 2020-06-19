@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HandsOnVR
 {
-
+	
 	[Flags]
 	public enum Hand { Left = 1, Right = 2 }
 
@@ -13,20 +13,20 @@ namespace HandsOnVR
 	/// <summary>
 	/// Match this transform to an Oculus Touch controller and monitor the states of its buttons.
 	/// </summary>
-	public class HandController : HandControllerBase
+	public class HandController : MonoBehaviour, IHandController
 	{
 		[SerializeField, SingleSelection] private Hand _hand;
-		override public Hand Hand { get { return _hand; } }
+		public Hand Hand => _hand;
 
 		// Note: Open an Inspector panel in debug mode to monitor these ButtonState values at runtime
 
-		override public ButtonState Grip { get; protected set; } = new ButtonState();
-		override public ButtonState Trigger { get; protected set; } = new ButtonState();
-		override public ButtonState AorX { get; protected set; } = new ButtonState();
-		override public ButtonState BorY { get; protected set; } = new ButtonState();
-		override public ButtonState ThumbRest { get; protected set; } = new ButtonState();
+		public ButtonState Grip { get; protected set; } = new ButtonState();
+		public ButtonState Trigger { get; protected set; } = new ButtonState();
+		public ButtonState AorX { get; protected set; } = new ButtonState();
+		public ButtonState BorY { get; protected set; } = new ButtonState();
+		public ButtonState ThumbRest { get; protected set; } = new ButtonState();
 
-		override public bool IsConnected
+		public bool IsConnected
 		{
 			get
 			{
@@ -46,8 +46,8 @@ namespace HandsOnVR
 			}
 		}
 
-		override public Vector3 Position => Xform.position;
-		override public Quaternion Rotation => Xform.rotation;
+		public Vector3 Position => Xform.position;
+		public Quaternion Rotation => Xform.rotation;
 
 
 		private void Update()

@@ -12,24 +12,28 @@ namespace HandsOnVR
 		[HelpBox("To move forward, point either controller in the direction you'd like to go, and push the thumbstick forward.  Push the thumbstick back to go in the reverse direction.  Use both controllers together to run.")]
 
 		[SerializeField, Tooltip("This is the distance to be travelled per second while walking.")]
-		float _walkSpeed = 1.5f;
-		[SerializeField, Tooltip("This is the distance to be travelled per second while running.")]
-		float _runSpeed = 4f;
+		private float _walkSpeed = 1.5f;
+		[SerializeField, Tooltip("This is the distance to be travelled per second while running.")] private float _runSpeed = 4f;
 
 		[Header("Component Links")]
-		[SerializeField] HandControllerBase _rightHand;
-		[SerializeField] HandControllerBase _leftHand;
-		[SerializeField] Transform _head;
+		[SerializeField]
+		private GameObject _rightHandController;
+		private IHandController _rightHand;
+		[SerializeField] private GameObject _leftHandController;
+		private IHandController _leftHand;
+		[SerializeField] private Transform _head;
 
-		Transform _xform;
-		Transform _right;
-		Transform _left;
+		private Transform _xform;
+		private Transform _right;
+		private Transform _left;
 
-		Vector3 _direction;
-		float _velocity;
+		private Vector3 _direction;
+		private float _velocity;
 
-		void Start()
+		private void Start()
 		{
+			_leftHand = _leftHandController.GetComponent<IHandController>();
+			_rightHand = _rightHandController.GetComponent<IHandController>();
 			if (_leftHand == null || _rightHand == null)
 			{
 				throw new Exception("PlayerWalk is missing component links!");
@@ -41,7 +45,7 @@ namespace HandsOnVR
 		}
 
 
-		void FixedUpdate()
+		private void FixedUpdate()
 		{
 			//TODO  Currently moving forward does not happen in conjunction with the Physics simulation.  As such, the solid hands can become embedded in objects they move into.
 

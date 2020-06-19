@@ -11,8 +11,8 @@ namespace HandsOnVR
 	[RequireComponent(typeof(GrabAttacher), typeof(CapsuleCollider))]
 	public class Grabber : MonoBehaviour
 	{
-		[SerializeField] private HandControllerBase _controller;
-		public HandControllerBase Controller { get { return _controller; } }
+		[SerializeField] private GameObject _controller;
+		public IHandController Controller { get; private set; }
 
 		[SerializeField] private Transform _focusPoint;
 		[SerializeField] private Animator _handSolid;
@@ -39,9 +39,12 @@ namespace HandsOnVR
 		/// <summary>Grabbables currently intersecting the trigger volume</summary>
 		private List<GrabbableStats> _canGrab = new List<GrabbableStats>();
 
+		public GrabAttacher Attacher => _attacher;
+		private GrabAttacher _attacher;
+		
+		
 		private Grabbable _grabbed;
 		private RaycastHit[] _hits = new RaycastHit[64];
-		private GrabAttacher _attacher;
 		private CapsuleCollider _triggerVolume;
 
 		private PoseTrigger _poseTrigger;
@@ -89,6 +92,7 @@ namespace HandsOnVR
 
 		private void Awake()
 		{
+			Controller = _controller ? _controller.GetComponent<IHandController>() : GetComponentInParent<IHandController>();
 			_attacher = GetComponent<GrabAttacher>();
 			_triggerVolume = GetComponent<CapsuleCollider>();
 			MaxRadius = _triggerVolume.bounds.size.magnitude;
@@ -109,7 +113,7 @@ namespace HandsOnVR
 					var trigger = other.GetComponent<PoseTrigger>();
 					if (trigger)
 					{
-						if (trigger.SupportsHand(_controller.Hand))
+						if (trigger.SupportsHand(Controller.Hand))
 						{
 							SetProximityPose(trigger.ProximityPoseID, trigger);
 						}
@@ -193,16 +197,16 @@ namespace HandsOnVR
 
 		private void Update()
 		{
-			if (_controller.Grip.Began)
+			if (Controller.Grip.Began)
 			{
 				// Start grabbing an object?
-				if (_controller.Grip.Began && _grabbables.Count > 0)
+				if (Controller.Grip.Began && _grabbables.Count > 0)
 				{
 					SelectAnchorAndGrab();
 				}
 			}
 			// Grab release?
-			else if (_grabbed && _controller.Grip.Ended)
+			else if (_grabbed && Controller.Grip.Ended)
 			{
 				EndGrab();
 			}
@@ -276,7 +280,7 @@ namespace HandsOnVR
 
 		private void SetGrab(Rigidbody grabbedBody, IGrabAnchor anchor)
 		{
-			_attacher.SetGrab(grabbedBody, anchor, _controller.Hand);
+			_attacher.SetGrab(grabbedBody, anchor, Controller.Hand);
 		}
 
 		private void SetSecondGrab(IGrabAnchor anchor, Transform target)

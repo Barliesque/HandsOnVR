@@ -7,11 +7,11 @@ namespace HandsOnVR
 	/// Controls movement of the solid hands, transitioning between matching the 
 	/// movements of the VR controllers and attaching themselves to a grabbed object.
 	/// </summary>
-//	[ExecuteInEditMode]
 	public class SolidHandMover : MonoBehaviour
 	{
 
-		[SerializeField] private HandControllerBase _controller;
+		[SerializeField] private GameObject _handController;
+		private IHandController _controller;
 		
 		public bool MatchPosition = true;
 		public bool MatchRotation = true;
@@ -27,6 +27,7 @@ namespace HandsOnVR
 		private void Start()
 		{
 			_xform = GetComponent<Transform>();
+			_controller = _handController.GetComponent<IHandController>();
 		}
 
 

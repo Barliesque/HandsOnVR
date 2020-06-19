@@ -210,9 +210,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _walkSpeed: 1.5
   _runSpeed: 4
-  _rightHand: {fileID: 4011123168962059041}
-  _leftHand: {fileID: 804693599322604857}
-  _head: {fileID: 0}
+  _rightHandController: {fileID: 2804962586181591843}
+  _leftHandController: {fileID: 1904386341989809467}
+  _head: {fileID: 2104087092437840123}
 --- !u!114 &3886008205112302249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,6 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _debugLog: 0
   queueAhead: 1
   useRecommendedMSAALevel: 1
   _monoscopic: 0
@@ -254,6 +255,7 @@ MonoBehaviour:
   extraHiddenLayers:
     serializedVersion: 2
     m_Bits: 0
+  externalCompositionBackdropColor: {r: 0, g: 0, b: 0, a: 0}
   capturingCameraDevice: 0
   flipCameraFrameHorizontally: 0
   flipCameraFrameVertically: 0
@@ -273,6 +275,7 @@ MonoBehaviour:
   virtualGreenScreenBottomY: -10
   virtualGreenScreenApplyDepthCulling: 0
   virtualGreenScreenDepthTolerance: 0.2
+  mrcActivationMode: 0
   _trackingOriginType: 1
   usePositionTracking: 1
   useRotationTracking: 1
@@ -280,6 +283,7 @@ MonoBehaviour:
   resetTrackerOnLoad: 0
   AllowRecenter: 0
   _reorientHMDOnControllerRecenter: 1
+  LateControllerUpdate: 1
 --- !u!1 &3886008205343854674
 GameObject:
   m_ObjectHideFlags: 0
@@ -1003,6 +1007,11 @@ PrefabInstance:
       propertyPath: _otherHand
       value: 
       objectReference: {fileID: 3886008204602410460}
+    - target: {fileID: 1059333911868749729, guid: 6a0c8ee62bac0734b9f74fbfdd014119,
+        type: 3}
+      propertyPath: _controller
+      value: 
+      objectReference: {fileID: 2804962586181591843}
     - target: {fileID: 1059333911962087380, guid: 6a0c8ee62bac0734b9f74fbfdd014119,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1501,18 +1510,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 567130977753082981}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4011123168962059041 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3491562789485754180, guid: 6a0c8ee62bac0734b9f74fbfdd014119,
+--- !u!1 &2804962586181591843 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2392502129673293638, guid: 6a0c8ee62bac0734b9f74fbfdd014119,
     type: 3}
   m_PrefabInstance: {fileID: 567130977753082981}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51925ce18a5aae044bea5c87e12065fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &679295919268666308 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1059333911868749729, guid: 6a0c8ee62bac0734b9f74fbfdd014119,
@@ -1712,6 +1715,11 @@ PrefabInstance:
       propertyPath: _otherHand
       value: 
       objectReference: {fileID: 679295919268666308}
+    - target: {fileID: 4359633790980692049, guid: fa905759039cd494a8693cfc595611d0,
+        type: 3}
+      propertyPath: _controller
+      value: 
+      objectReference: {fileID: 1904386341989809467}
     - target: {fileID: 4359633791089155928, guid: fa905759039cd494a8693cfc595611d0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2177,15 +2185,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa56340d8acf52f4c8020dd2c36d89d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &804693599322604857 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 164241312734943412, guid: fa905759039cd494a8693cfc595611d0,
+--- !u!1 &1904386341989809467 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1369346366518419638, guid: fa905759039cd494a8693cfc595611d0,
     type: 3}
   m_PrefabInstance: {fileID: 679295919373753741}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51925ce18a5aae044bea5c87e12065fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
