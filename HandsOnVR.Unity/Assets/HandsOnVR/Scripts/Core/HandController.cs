@@ -1,14 +1,9 @@
 ﻿using Barliesque.InspectorTools;
-using System;
 using UnityEngine;
 
 
 namespace HandsOnVR
 {
-	
-	[Flags]
-	public enum Hand { Left = 1, Right = 2 }
-
 
 	/// <summary>
 	/// Match this transform to an Oculus Touch controller and monitor the states of its buttons.
