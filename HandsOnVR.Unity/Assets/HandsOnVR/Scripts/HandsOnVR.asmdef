@@ -1,0 +1,15 @@
+{
+    "name": "HandsOnVR",
+    "references": [
+        "GUID:a4f74d2114008d04a8d5556aea7c7122"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

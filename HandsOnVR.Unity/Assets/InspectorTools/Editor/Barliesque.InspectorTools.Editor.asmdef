@@ -1,0 +1,17 @@
+{
+    "name": "Barliesque.InspectorTools.Editor",
+    "references": [
+        "GUID:a4f74d2114008d04a8d5556aea7c7122"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

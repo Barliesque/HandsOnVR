@@ -1,16 +1,17 @@
-﻿
-using System;
+﻿using System;
 using UnityEngine;
+
 
 namespace HandsOnVR
 {
+	
 	[Serializable]  // Open an Inspector panel in debug mode to monitor the state values in HandController
 	public class ButtonState
 	{
-		float _analog;
-		bool _wasActive;
-		float _threshold;
-		float _heldTime;
+		private float _analog;
+		private bool _wasActive;
+		private float _threshold;
+		private float _heldTime;
 
 
 		/// <summary>
@@ -24,10 +25,10 @@ namespace HandsOnVR
 
 
 		/// <summary>
-		/// For internal use.  Called every frame to update the current state of the button.
+		/// To be called once every frame to update the current state of the button.
 		/// </summary>
 		/// <param name="analog">The analog value of the button, from 0.0 to 1.0</param>
-		internal void Update(float analog)
+		public void Update(float analog)
 		{
 			_wasActive = IsActive;
 			_analog = analog;
@@ -46,34 +47,22 @@ namespace HandsOnVR
 		/// <summary>
 		/// Is the button currently pressed sufficiently to activate?
 		/// </summary>
-		public bool IsActive
-		{
-			get { return _analog >= _threshold; }
-		}
+		public bool IsActive => _analog >= _threshold;
 
 		/// <summary>
 		/// Did the button become active this frame?
 		/// </summary>
-		public bool Began
-		{
-			get { return IsActive && !_wasActive; }
-		}
+		public bool Began => IsActive && !_wasActive;
 
 		/// <summary>
 		/// Did the button become inactive this frame?
 		/// </summary>
-		public bool Ended
-		{
-			get { return _wasActive && !IsActive; }
-		}
+		public bool Ended => _wasActive && !IsActive;
 
 		/// <summary>
 		/// How long has the button been active?  Zero is returned if the button is not currently active.
 		/// </summary>
-		public float HeldTime
-		{
-			get { return _heldTime; }
-		}
+		public float HeldTime => _heldTime;
 	}
 
 }

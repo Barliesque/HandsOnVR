@@ -1,0 +1,18 @@
+{
+    "name": "HandsOnVR.Editor",
+    "references": [
+        "GUID:64ce727a7ffb88243800fc67bc576f60",
+        "GUID:dc89406a396855e48b76922faabc804e"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
