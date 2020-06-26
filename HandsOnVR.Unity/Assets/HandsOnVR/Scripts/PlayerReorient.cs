@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.XR;
 
 namespace HandsOnVR
 {
@@ -6,7 +7,7 @@ namespace HandsOnVR
 	public class PlayerReorient : MonoBehaviour
 	{
 
-		[SerializeField] Increment _increment = Increment._45Degrees;
+		[SerializeField] private Increment _increment = Increment._45Degrees;
 		public enum Increment
 		{
 			_15Degrees = 15,
@@ -16,26 +17,36 @@ namespace HandsOnVR
 		}
 
 		[Header("Component Links")]
-		[SerializeField] Transform _head;
+		[SerializeField] private Transform _head;
 
-		Transform _xform;
+		private Transform _xform;
 
-		void Start()
+		private readonly ButtonState _turnLeft = new ButtonState();
+		private readonly ButtonState _turnRight = new ButtonState();
+
+
+		private void Start()
 		{
 			_xform = GetComponent<Transform>();
 		}
 
 
-		void Update()
+		private void Update()
 		{
-			var turnRight = OVRInput.GetDown(OVRInput.RawButton.RThumbstickRight | OVRInput.RawButton.LThumbstickRight) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D);
-			var turnLeft = OVRInput.GetDown(OVRInput.RawButton.RThumbstickLeft | OVRInput.RawButton.LThumbstickLeft) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A);
+			var leftHand = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+			var rightHand = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
 
-			if (turnRight)
+			leftHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var leftStick);
+			rightHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var rightStick);
+
+			_turnLeft.Update(Mathf.Clamp01(-leftStick.x - rightStick.x));
+			_turnRight.Update(Mathf.Clamp01(leftStick.x + rightStick.x));
+			
+			if (_turnRight.Began)
 			{
 				_xform.RotateAround(_head.position, Vector3.up, (float)_increment);
 			}
-			if (turnLeft)
+			if (_turnLeft.Began)
 			{
 				_xform.RotateAround(_head.position, Vector3.up, -(float)_increment);
 			}

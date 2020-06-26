@@ -11,7 +11,6 @@ namespace HandsOnVR
 		Hand Hand { get; }
 		Vector3 Position { get; }
 		Quaternion Rotation { get; }
-		ButtonState ThumbRest { get; }
 		ButtonState Trigger { get; }
 		T GetComponent<T>();
 	}

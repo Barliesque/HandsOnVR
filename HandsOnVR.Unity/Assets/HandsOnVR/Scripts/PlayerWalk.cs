@@ -1,26 +1,30 @@
 ﻿using System;
 using UnityEngine;
 using Barliesque.InspectorTools;
+using UnityEngine.XR;
 
 
 namespace HandsOnVR
 {
 
-
 	public class PlayerWalk : MonoBehaviour
 	{
 		[HelpBox("To move forward, point either controller in the direction you'd like to go, and push the thumbstick forward.  Push the thumbstick back to go in the reverse direction.  Use both controllers together to run.")]
 
-		[SerializeField, Tooltip("This is the distance to be travelled per second while walking.")]
-		private float _walkSpeed = 1.5f;
-		[SerializeField, Tooltip("This is the distance to be travelled per second while running.")] private float _runSpeed = 4f;
+		[Tooltip("This is the distance to be travelled per second while walking.")]
+		[SerializeField] private float _walkSpeed = 1.5f;
+		
+		[Tooltip("This is the distance to be travelled per second while running.")] 
+		[SerializeField] private float _runSpeed = 4f;
+
+		[Tooltip("If the controller is within this radius from the head position (on the X/Z plane) then gaze will determine the direction of travel instead of the controller orientation.  A value less than zero disables this feature.")]
+		[SerializeField] private float _gazeRadius = 0.4f;
 
 		[Header("Component Links")]
-		[SerializeField]
-		private GameObject _rightHandController;
-		private IHandController _rightHand;
+		[SerializeField] private GameObject _rightHandController;
+		[SerializeField] private IHandController _rightHand;
 		[SerializeField] private GameObject _leftHandController;
-		private IHandController _leftHand;
+		[SerializeField] private IHandController _leftHand;
 		[SerializeField] private Transform _head;
 
 		private Transform _xform;
@@ -29,7 +33,10 @@ namespace HandsOnVR
 
 		private Vector3 _direction;
 		private float _velocity;
+		private bool _usingGaze;
 
+		private float _smoothT;
+		
 		private void Start()
 		{
 			_leftHand = _leftHandController.GetComponent<IHandController>();
@@ -42,38 +49,79 @@ namespace HandsOnVR
 			_xform = GetComponent<Transform>();
 			_right = _rightHand.GetComponent<Transform>();
 			_left = _leftHand.GetComponent<Transform>();
+			
+			
+			_smoothT = Mathf.LerpUnclamped(0.125f, 0.0625f, Mathf.InverseLerp(0.2f, 0.1f, Time.fixedDeltaTime));
+			Debug.Log(_smoothT);
 		}
 
 
 		private void FixedUpdate()
 		{
-			//TODO  Currently moving forward does not happen in conjunction with the Physics simulation.  As such, the solid hands can become embedded in objects they move into.
+			var leftHand = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+			var rightHand = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
 
-			var forwardR = OVRInput.Get(OVRInput.RawButton.RThumbstickUp);
-			var forwardL = OVRInput.Get(OVRInput.RawButton.LThumbstickUp);
-			var backwardR = OVRInput.Get(OVRInput.RawButton.RThumbstickDown);
-			var backwardL = OVRInput.Get(OVRInput.RawButton.LThumbstickDown);
-			var right = (forwardR || backwardR);
-			var left = (forwardL || backwardL);
-			var walk = right ^ left;
-			var run = right && left && (forwardR == forwardL);
+			leftHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var leftStick);
+			rightHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var rightStick);
+			
+			var absL = Mathf.Abs(leftStick.y);
+			var absR = Mathf.Abs(rightStick.y);
+			var sign = Mathf.Sign(leftStick.y + rightStick.y);
+			var speed = Mathf.Abs(leftStick.y + rightStick.y);
+			speed *= speed * speed;
+			speed = speed > 1f ? Mathf.Lerp(_walkSpeed, _runSpeed, speed - 1f) : Mathf.Lerp(0f, _walkSpeed, speed);
+			_velocity = Mathf.Lerp(_velocity, speed * sign,  _smoothT);
 
+			// If either hand is beyond a specified radius from the head (on the XZ-plane) that hand's direction is used, otherwise the head's direction is used.
+			var leftDeltaXZ = (_leftHand.Position - _head.position);
+			leftDeltaXZ.y = 0f;
+			var rightDeltaXZ = (_rightHand.Position - _head.position);
+			rightDeltaXZ.y = 0f;
+			var leftPointing = leftDeltaXZ.sqrMagnitude > (_gazeRadius * _gazeRadius) && absL > 0.25f;
+			var rightPointing = rightDeltaXZ.sqrMagnitude > (_gazeRadius * _gazeRadius) && absR > 0.25f;
+
+			// Change between gaze and controller direction? 
+			//if (absL < 0.1f && absR < 0.1f)
+			{
+				_usingGaze = !leftPointing && !rightPointing;
+			}
+			
+			if (_usingGaze)
+			{
+				// Gaze controls direction
+				var headAngle = _head.eulerAngles.y * Mathf.Deg2Rad;
+				_direction = new Vector3(Mathf.Sin(headAngle), 0f, Mathf.Cos(headAngle));
+			}
+			else
+			{
+				// Blend the directions of the two hands, balanced by strength of input
+				_direction = (_left.forward * absL + _right.forward * absR);
+				_direction.y = 0f;
+				_direction.Normalize();
+			}
+
+			_xform.position += _direction * (_velocity * Time.fixedDeltaTime);
+
+			
+
+			/*
 			bool head = false;
 			if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
 			{
-				walk = forwardR = head = true;
+				walk = 1f; 
+				head = true;
 			}
 			if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
 			{
-				walk = backwardR = head = true;
+				walk = 1f;
+				head = true;
 			}
 
-			if (!walk && !run)
+			if (Mathf.Abs(walk) < 0.01f)
 			{
 				_velocity = Mathf.Lerp(_velocity, 0f, 0.125f);
-			}
-
-			if (walk)
+			} 
+			else 
 			{
 				if (head)
 				{
@@ -107,6 +155,8 @@ namespace HandsOnVR
 			}
 
 			_xform.position += _direction * (_velocity * Time.fixedDeltaTime);
+			
+			*/
 		}
 
 
